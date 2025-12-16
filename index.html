@@ -12,131 +12,200 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
+        :root {
+            --primary-color: #363636;
+            --accent-color: #3273dc;
+            --bg-light: #ffffff;
+            --bg-dark: #f9fafb; /* Lighter grey for subtle contrast */
+            --text-color: #2c3e50;
+            --border-color: #e5e7eb;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Noto Sans', sans-serif;
             font-size: 16px;
-            line-height: 1.6;
-            color: #333;
-            background-color: #fcfcfc;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--bg-light);
             margin: 0;
             padding: 0;
         }
 
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 0.8rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        /* Typography */
         h1, h2, h3 {
             font-family: 'Google Sans', sans-serif;
-            color: #202124;
+            color: #111;
             font-weight: 600;
+            margin-top: 0;
         }
 
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5em;
-            text-align: center;
+            font-size: 2.8rem;
             line-height: 1.2;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
         }
 
         h2 {
-            font-size: 1.75rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.3rem;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
             text-align: center;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+            margin: 10px auto 0;
+            border-radius: 2px;
         }
         
         h3 {
             font-size: 1.4rem;
             margin-top: 1.5rem;
-            color: #4a4a4a;
+            margin-bottom: 1rem;
+            color: #444;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
         }
 
         a {
-            color: #3273dc;
+            color: var(--accent-color);
             text-decoration: none;
-            transition: color 0.2s ease;
+            transition: all 0.2s ease;
         }
 
         a:hover {
-            color: #1e4b8f;
             text-decoration: underline;
         }
 
+        /* Layout */
+        .section {
+            padding: 5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section:nth-child(odd) {
+            background-color: var(--bg-light);
+        }
+
+        .section:nth-child(even) {
+            background-color: var(--bg-dark);
+        }
+        
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 20px;
         }
 
-        /* Header Section */
-        .header-content {
+        /* Hero Section (Header) */
+        .hero {
+            padding-top: 8rem; /* Account for fixed nav */
+            padding-bottom: 4rem;
             text-align: center;
-            margin-bottom: 3rem;
-            padding-top: 2rem;
+            background: linear-gradient(to bottom, #fff, #f8f9fa);
         }
 
         .authors {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             margin-bottom: 1.5rem;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         .author-block {
             display: inline-block;
-            margin: 0 10px;
-            white-space: nowrap;
+            margin: 0 8px;
         }
         
         .author-sup {
             font-size: 0.7em;
             vertical-align: super;
             color: #666;
+            margin-left: 2px;
         }
 
         .affiliations {
-            font-size: 0.9rem;
-            color: #5f6368;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
         }
         
         .affiliation-block {
             display: inline-block;
-            margin: 0 8px;
+            margin: 0 10px;
         }
 
-        .correspondence {
-            font-size: 0.85rem;
-            color: #888;
-            font-style: italic;
-            margin-bottom: 2rem;
-        }
-
-        /* Buttons */
-        .link-buttons {
+        .btn-group {
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 2rem;
+            margin-top: 2rem;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
-            background-color: #363636;
+            background-color: #202124;
             color: #fff !important;
-            padding: 10px 20px;
-            border-radius: 24px;
+            padding: 12px 24px;
+            border-radius: 50px;
             font-weight: 500;
             font-size: 1rem;
             text-decoration: none !important;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .btn:hover {
-            background-color: #4a4a4a;
+            background-color: #3c4043;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
         .btn i {
@@ -144,167 +213,197 @@
         }
 
         /* Abstract */
-        .abstract-container {
-            background-color: #f5f5f5;
+        .abstract-box {
+            background-color: #fff;
+            border: 1px solid #eee;
             padding: 2.5rem;
-            border-radius: 12px;
-            margin-bottom: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            max-width: 900px;
+            margin: 0 auto;
             text-align: justify;
         }
 
-        .abstract-title {
-            font-family: 'Google Sans', sans-serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            text-align: center;
-            margin-bottom: 1rem;
-            margin-top: 0;
-        }
-
-        /* Figures */
+        /* Figures & Images */
         .figure-block {
-            margin: 2.5rem 0;
+            margin: 3rem 0;
             text-align: center;
         }
 
         .figure-block img {
             max-width: 100%;
             height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            background: white;
+            padding: 10px;
+        }
+        
+        .figure-block img:hover {
+            transform: scale(1.01);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
         }
 
         .caption {
-            margin-top: 15px;
-            font-size: 0.95rem;
-            color: #4a4a4a;
-            text-align: justify;
-            max-width: 90%;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            color: #555;
+            text-align: center;
+            max-width: 85%;
             margin-left: auto;
             margin-right: auto;
             font-family: 'Castoro', serif;
+        }
+        
+        .caption strong {
+            color: #111;
+            font-weight: 600;
         }
 
         /* Tables */
         .table-wrapper {
             overflow-x: auto;
             margin: 2rem 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background: #fff;
-            padding: 1rem;
+            border: 1px solid #eee;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-family: 'Google Sans', sans-serif;
+            white-space: nowrap;
         }
         
         .table-caption {
             font-family: 'Castoro', serif;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-weight: bold;
-            color: #4a4a4a;
+            color: #333;
         }
 
         th, td {
-            padding: 12px 8px;
+            padding: 14px 12px;
             text-align: center;
-            border-bottom: 1px solid #eee;
         }
 
         th {
             background-color: #f8f9fa;
-            font-weight: 600;
+            font-weight: 700;
             color: #202124;
             border-bottom: 2px solid #dfe1e5;
         }
         
-        /* Booktabs style lines */
-        tr:first-child th {
-            border-top: 2px solid #333;
+        td {
+            border-bottom: 1px solid #f1f3f4;
         }
+
         tr:last-child td {
-            border-bottom: 2px solid #333;
+            border-bottom: none;
         }
 
         .group-header {
             background-color: #e8f0fe;
             color: #1967d2;
-            font-weight: bold;
+            font-weight: 700;
             text-align: left;
-            padding-left: 15px;
+            padding-left: 20px;
         }
         
         .highlight-row {
-            background-color: #e6fffa; /* Light teal for emphasis */
-        }
-        
-        .highlight-text {
-            color: #d93025; /* Red for emphasis */
-            font-weight: bold;
+            background-color: #e6fffa;
         }
 
-        /* Content Sections */
-        .section-content {
-            text-align: justify;
-            margin-bottom: 2rem;
+        /* Lists */
+        ul, ol {
             font-family: 'Castoro', serif;
             font-size: 1.1rem;
+            padding-left: 2rem;
+            color: #444;
         }
         
-        .section-content p {
-            margin-bottom: 1.2em;
+        li {
+            margin-bottom: 0.8rem;
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            opacity: 0.8;
+            z-index: 999;
         }
         
-        .list-items {
-            list-style-type: disc;
-            margin-left: 20px;
-            font-family: 'Castoro', serif;
-        }
-        
-        .list-items li {
-            margin-bottom: 0.5rem;
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            opacity: 1;
+            background-color: var(--accent-color);
         }
 
         /* BibTeX */
-        .bibtex-section {
-            background-color: #f1f3f4;
-            padding: 20px;
+        .bibtex-container {
+            background-color: #2d3436;
+            color: #dfe6e9;
+            padding: 2rem;
             border-radius: 8px;
             overflow-x: auto;
-            font-family: monospace;
+            font-family: 'Roboto Mono', monospace;
             font-size: 0.85rem;
-            line-height: 1.4;
-            border-left: 4px solid #3273dc;
-            margin-top: 3rem;
+            line-height: 1.5;
+            margin-top: 2rem;
         }
 
-        /* Footer */
         footer {
             text-align: center;
-            margin-top: 4rem;
-            padding: 2rem 0;
-            font-size: 0.9rem;
-            color: #aaa;
+            padding: 3rem 1rem;
+            color: #888;
+            background-color: #fff;
             border-top: 1px solid #eee;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            h1 { font-size: 1.8rem; }
-            .authors { font-size: 1rem; }
-            .abstract-container { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            .nav-container { display: none; } /* Hide nav on mobile for simplicity */
+            .section { padding: 3rem 1rem; }
+            .btn-group { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header-content">
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="#top" class="nav-link">Home</a>
+        <a href="#abstract" class="nav-link">Abstract</a>
+        <a href="#motivation" class="nav-link">Motivation</a>
+        <a href="#framework" class="nav-link">Framework</a>
+        <a href="#experiments" class="nav-link">Experiments</a>
+        <a href="#citation" class="nav-link">Citation</a>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="top" class="section hero">
+    <div class="container">
         <h1>Are We Using the Right Benchmark:<br>An Evaluation Framework for Visual Token Compression Methods</h1>
         
         <div class="authors">
@@ -334,142 +433,121 @@
             <span class="affiliation-block"><span class="author-sup">8</span>University of Trento</span>
         </div>
         
-        <div class="correspondence">
-            * Corresponding authors
-        </div>
-
-        <div class="link-buttons">
+        <div class="btn-group">
             <a href="https://github.com/Chenfei-Liao/VTC-Bench" class="btn">
-                <i class="fab fa-github"></i> Code
+                <i class="fab fa-github"></i> View on GitHub
             </a>
-            <!-- Placeholder for Paper link if available -->
-             <a href="#" class="btn" style="background-color: #d1d1d1; cursor: not-allowed;">
+            <a href="#" class="btn" style="background-color: #999; cursor: not-allowed;">
                 <i class="fas fa-file-pdf"></i> Paper (Coming Soon)
             </a>
-            <!-- Placeholder for Data link -->
-             <a href="#" class="btn" style="background-color: #d1d1d1; cursor: not-allowed;">
-                <i class="fas fa-database"></i> Data (Coming Soon)
-            </a>
         </div>
     </div>
+</section>
 
-    <div class="abstract-container">
-        <h2 class="abstract-title">Abstract</h2>
-        <p>
-            Recent endeavors to accelerate inference in Multimodal Large Language Models (MLLMs) have primarily focused on visual token compression. The effectiveness of these methods is typically assessed by measuring the accuracy drop on established benchmarks, comparing model performance before and after compression. However, these benchmarks are originally designed to assess the perception and reasoning capabilities of MLLMs, rather than to evaluate compression techniques. As a result, directly applying them to visual token compression introduces a task mismatch. Strikingly, our investigation reveals that <strong>simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks</strong>.
-        </p>
-        <p>
-            Through extensive experiments, we make the following observations: 
-            <br>(i) Current benchmarks are noisy for the visual token compression task. 
-            <br>(ii) Down-sampling is able to serve as a data filter to evaluate the difficulty of samples in the visual token compression task. 
-            <br>Motivated by these findings, we introduce <strong>VTC-Bench</strong>, an evaluation framework that incorporates a data filtering mechanism to denoise existing benchmarks, thereby enabling fairer and more accurate assessment of visual token compression methods.
-        </p>
-    </div>
-
-    <!-- Motivation Figure Area -->
-    <div class="figure-block">
-        <img src="Figure2.svg" alt="Motivation: Downsampling outperforms advanced methods">
-        <div class="caption">
-            <strong>Figure 2.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks (Model: Qwen2-VL-7B; Device: 1 A800). (b) Inference time per image comparison of DART and Downsample. Surprisingly, simple downsampling consistently outperforms many advanced compression methods.
+<!-- Abstract Section -->
+<section id="abstract" class="section">
+    <div class="container">
+        <div class="abstract-box">
+            <h2 style="margin-top:0; font-size:1.8rem; border-bottom:none;">Abstract</h2>
+            <p>
+                Recent endeavors to accelerate inference in Multimodal Large Language Models (MLLMs) have primarily focused on visual token compression. The effectiveness of these methods is typically assessed by measuring the accuracy drop on established benchmarks. However, these benchmarks are originally designed to assess perception and reasoning capabilities, not compression efficiency.
+            </p>
+            <p>
+                Strikingly, our investigation reveals that <strong>simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks</strong>.
+            </p>
+            <p>
+                Motivated by these findings, we introduce <strong>VTC-Bench</strong>, an evaluation framework that incorporates a data filtering mechanism to denoise existing benchmarks, thereby enabling fairer and more accurate assessment of visual token compression methods.
+            </p>
         </div>
     </div>
+</section>
 
-    <div class="section-content">
-        <h2>1. Motivation: Simplicity Bias</h2>
-        <p>
-            Multimodal Large Language Models (MLLMs) have shown impressive abilities, but their efficiency is constrained by high computational costs. Numerous visual token compression methods have been proposed to reduce redundancy. Yet, these methods are typically evaluated on general MLLM benchmarks not designed for compression.
+<!-- Motivation Section -->
+<section id="motivation" class="section">
+    <div class="container">
+        <h2>Motivation: The Simplicity Bias</h2>
+        <p style="text-align:center; font-size:1.2rem; margin-bottom:2rem; max-width:800px; margin-left:auto; margin-right:auto;">
+            <em>"Are current benchmarks difficult enough to evaluate visual token compression?"</em>
         </p>
-        <p>
-            We uncover a surprising finding: <strong>simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks.</strong> This suggests that current evaluation frameworks fail to capture the challenges inherent in visual token compression.
-        </p>
-        <p>
-            Two crucial findings are concluded from our empirical study:
-        </p>
-        <ul class="list-items">
-            <li><strong>Current benchmarks are noisy:</strong> The counterintuitive phenomenon generally exists in popular benchmarks.</li>
-            <li><strong>Downsampling as a filter:</strong> The correct sample group under downsampling achieves significantly better accuracy than the incorrect group, proving downsampling can serve as a difficulty filter.</li>
-        </ul>
-    </div>
-
-    <div class="section-content">
-        <h2>2. VTC-Bench Framework</h2>
-        <p>
-            We propose <strong>VTC-Bench</strong>, a new evaluation framework designed to optimize and denoise existing benchmarks. By explicitly distinguishing between “simple” and “difficult” samples through downsampling, VTC-Bench adaptively selects samples that truly evaluate compression capabilities.
-        </p>
-    </div>
-
-    <div class="figure-block">
-        <img src="Figure1.svg" alt="VTC-Bench Framework Pipeline">
-        <div class="caption">
-            <strong>Figure 1. The VTC-Bench Framework.</strong> A simple but effective framework that transforms any existing benchmark into a subset that fairly evaluates Visual Token Compression (VTC) methods. It uses downsampling performance as a discriminator to separate "Simple" from "Difficult" samples.
-        </div>
-    </div>
-
-    <div class="section-content">
-        <h3>Grouping Logic</h3>
-        <p>
-            The pipeline consists of three critical steps:
-        </p>
-        <ol class="list-items">
-            <li><strong>Inference & Compression:</strong> Run a downsampling baseline (the filter) and advanced compression methods.</li>
-            <li><strong>Grouping:</strong> Use the performance of the downsampling method to categorize samples:
-                <ul>
-                    <li><strong>Group A (Difficult Samples):</strong> Answered <span style="color:#d93025; font-weight:bold;">incorrectly</span> by downsampling.</li>
-                    <li><strong>Group B (Simple Samples):</strong> Answered <span style="color:#188038; font-weight:bold;">correctly</span> by downsampling.</li>
-                </ul>
-            </li>
-            <li><strong>Result Aggregation:</strong> Perform statistical analysis on the "difficult" samples to obtain a fair indicator.</li>
-        </ol>
-    </div>
-
-    <div class="section-content">
-        <h2>3. Experiments & Findings</h2>
-        <p>
-            When evaluated using VTC-Bench (focusing on "Difficult Samples"), the landscape of visual token compression changes completely. Advanced methods prove their worth where it matters most, while downsampling (by definition) fails on these difficult samples.
-        </p>
-
-        <div class="table-wrapper">
-            <div class="table-caption">Table 1: Comparison of Advanced Token Compression Methods and Downsampling on Qwen2-VL-7B. <br>(ADR: Average Decline Ratio)</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Method</th>
-                        <th>GQA</th>
-                        <th>MMB</th>
-                        <th>MME</th>
-                        <th>POPE</th>
-                        <th>MMStar</th>
-                        <th>ChartQA</th>
-                        <th>ADR</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="group-header"><td colspan="8">Token Reduction (↓ 75.00%)</td></tr>
-                    <tr><td>FastV</td><td>57.0</td><td>73.7</td><td>2083</td><td>84.5</td><td>44.6</td><td>58.1</td><td>83.2</td></tr>
-                    <tr><td>VisionZip</td><td>58.6</td><td>71.1</td><td>2062</td><td>87.1</td><td>47.2</td><td>66.9</td><td>84.9</td></tr>
-                    <tr><td>DART</td><td>56.9</td><td>72.5</td><td>2066</td><td>84.7</td><td>47.2</td><td>52.7</td><td>83.9</td></tr>
-                    <tr class="highlight-row" style="font-weight:bold;"><td>+ Downsample</td><td>59.2</td><td>75.0</td><td>2259</td><td>86.2</td><td>50.1</td><td>65.0</td><td>91.0</td></tr>
-                </tbody>
-            </table>
-            <div style="font-size:0.8rem; color:#666; margin-top:5px; text-align:center;">* Simplified table. See paper for full results.</div>
-        </div>
 
         <div class="figure-block">
-            <img src="Figure4.svg" alt="Group A vs Group B comparison" style="max-width: 80%;">
+            <img src="motivation.svg" alt="Average Decline Ratio Comparison">
             <div class="caption">
-                <strong>Figure 4.</strong> Comparison of advanced token compression methods and downsampling on Qwen2-VL-7B by groups at 75% compression. Note the huge gap between Group B (Simple) and Group A (Difficult).
+                <strong>Figure 1. The Anomaly.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks. (b) Inference time comparison. 
+                <br>Surprisingly, <strong>simple downsampling (the baseline) outperforms sophisticated methods</strong> on most general benchmarks.
             </div>
         </div>
 
-        <div class="section-content">
-            <h3>Performance on "Difficult Samples" (Group A)</h3>
+        <div style="max-width:800px; margin:0 auto; font-family:'Castoro', serif; font-size:1.1rem; text-align:justify;">
             <p>
-                <strong>Is downsampling all you need?</strong> No. VTC-Bench overturns this impression. When restricted to compression-relevant <em>difficult samples</em> (Group A), advanced methods significantly outperform the baseline.
+                We conducted a comprehensive empirical study and found a counterintuitive phenomenon: 
+                Simple image downsampling consistently outperforms advanced compression methods (like FastV, VisionZip) across multiple popular benchmarks (GQA, MMBench, etc.).
             </p>
+            <p>
+                <strong>Why?</strong> Because existing benchmarks contain many "simple" samples that can be answered correctly even with very low-resolution images. These samples act as noise, masking the true performance differences between compression methods.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Framework Section -->
+<section id="framework" class="section">
+    <div class="container">
+        <h2>VTC-Bench Framework</h2>
+        
+        <div class="figure-block">
+            <img src="framework.svg" alt="VTC-Bench Framework Pipeline">
+            <div class="caption">
+                <strong>Figure 2. VTC-Bench Overview.</strong> We propose using <em>downsampling as a difficulty filter</em>. 
+                Samples are categorized into <strong>Group A (Difficult)</strong> and <strong>Group B (Simple)</strong> based on whether the downsampling baseline can answer them correctly.
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:center; margin-top:3rem;">
+            <div style="background:#fff; padding:2rem; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05); max-width:800px;">
+                <h3 style="text-align:center; margin-top:0;">The Filtering Mechanism</h3>
+                <ul style="list-style:none; padding:0;">
+                    <li style="margin-bottom:1.5rem;">
+                        <span style="display:inline-block; width:30px; height:30px; background:var(--accent-color); color:#fff; border-radius:50%; text-align:center; line-height:30px; margin-right:10px; font-weight:bold;">1</span>
+                        <strong>Inference:</strong> Run the model with simple image downsampling.
+                    </li>
+                    <li style="margin-bottom:1.5rem;">
+                        <span style="display:inline-block; width:30px; height:30px; background:var(--accent-color); color:#fff; border-radius:50%; text-align:center; line-height:30px; margin-right:10px; font-weight:bold;">2</span>
+                        <strong>Grouping:</strong>
+                        <div style="margin-left:45px; margin-top:10px;">
+                            <div style="margin-bottom:5px;">🔴 <strong>Group A (Difficult):</strong> Downsampling fails. (Target for evaluation)</div>
+                            <div>🟢 <strong>Group B (Simple):</strong> Downsampling succeeds. (Filtered out)</div>
+                        </div>
+                    </li>
+                    <li>
+                        <span style="display:inline-block; width:30px; height:30px; background:var(--accent-color); color:#fff; border-radius:50%; text-align:center; line-height:30px; margin-right:10px; font-weight:bold;">3</span>
+                        <strong>Evaluation:</strong> Assess advanced methods <em>only</em> on Group A to reveal their true capability in preserving fine-grained details.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Experiments Section -->
+<section id="experiments" class="section">
+    <div class="container">
+        <h2>Experiments & Findings</h2>
+        
+        <p style="text-align:center; margin-bottom:2rem;">
+            When we focus on "Difficult Samples" (Group A), the landscape changes completely.
+        </p>
+
+        <div class="figure-block">
+            <img src="analysis.svg" alt="Group Analysis Comparison">
+            <div class="caption">
+                <strong>Figure 3. Group Analysis (Qwen2-VL-7B @ 75% Compression).</strong> 
+                <br>Note the stark contrast: On Group B (Simple), all methods score high. On Group A (Difficult), downsampling scores 0% (by definition), while advanced methods show their value.
+            </div>
         </div>
 
         <div class="table-wrapper">
-            <div class="table-caption">Table 2: Performance on "Difficult Samples" (Group A) at 75% Compression.</div>
+            <div class="table-caption">Table 1: Performance on "Difficult Samples" (Group A) - The True Test.</div>
             <table>
                 <thead>
                     <tr>
@@ -484,30 +562,26 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr class="group-header"><td colspan="8">Token Reduction (↓ 75.00%)</td></tr>
                     <tr><td>FastV</td><td>57.8</td><td>45.2</td><td>78.9</td><td>65.4</td><td>41.0</td><td>35.0</td><td>51.1</td></tr>
                     <tr><td>VisionZip</td><td>59.3</td><td>42.4</td><td>54.9</td><td>72.5</td><td>45.9</td><td>51.2</td><td>49.8</td></tr>
                     <tr><td>DART</td><td>58.9</td><td>54.8</td><td>67.6</td><td>69.4</td><td>47.0</td><td>39.0</td><td>53.6</td></tr>
-                    <tr style="background-color:#ffebeb;"><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
+                    <tr style="background-color:#ffebeb; color:#d63031;"><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="figure-block">
-            <img src="Figure3.svg" alt="VTC-Bench results summary" style="max-width: 80%;">
+        <div class="figure-block" style="margin-top:4rem;">
+            <img src="results.svg" alt="Overall Results">
             <div class="caption">
-                <strong>Figure 3.</strong> VTC-Bench results on Qwen2-VL-7B.
+                <strong>Figure 4. Comprehensive VTC-Bench Results.</strong>
             </div>
         </div>
 
-        <div class="section-content">
-            <h3>Appendix: Results on LLaVA-OV-7B</h3>
-            <p>
-                We also validated VTC-Bench on other MLLMs. Table 4 shows the results on LLaVA-OV-7B.
-            </p>
-        </div>
-
+        <!-- Appendix Table -->
+        <h3 style="text-align:center; margin-top:4rem;">Extended Results: LLaVA-OV-7B</h3>
         <div class="table-wrapper">
-            <div class="table-caption">Table 4: VTC-Bench results on LLaVA-OV-7B.</div>
+            <div class="table-caption">Table 2: VTC-Bench results on LLaVA-OV-7B.</div>
             <table>
                 <thead>
                     <tr>
@@ -529,32 +603,34 @@
             </table>
         </div>
     </div>
+</section>
 
-    <div class="section-content">
-        <h2>4. Conclusion</h2>
-        <p>
-            This paper systematically analyzes the task mismatch problem in current MLLM benchmarks for visual token compression. We find that current benchmarks are noisy and that simple downsampling often outperforms advanced methods due to simplicity bias.
-        </p>
-        <p>
-            <strong>VTC-Bench</strong> serves as a robust filter to evaluate the difficulty of samples. By explicitly distinguishing between “simple” and “difficult” samples, it provides a fairer platform to demonstrate the true value of advanced compression techniques—preserving information where downsampling fails.
-        </p>
-    </div>
-
-    <div class="bibtex-section">
-        <h3>Citation</h3>
-        <pre><code>@article{liao2025vtcbench,
+<!-- Citation Section -->
+<section id="citation" class="section" style="background-color: #fff;">
+    <div class="container">
+        <h2>Citation</h2>
+        <div class="bibtex-container">
+<pre>@article{liao2025vtcbench,
   title={Are We Using the Right Benchmark: An Evaluation Framework for Visual Token Compression Methods},
   author={Liao, Chenfei and Wang, Wensong and Wen, Zichen and Zheng, Xu and Wang, Yiyu and He, Haocong and Lyu, Yuanhuiyi and Jiang, Lutao and Zou, Xin and Fu, Yuqian and Ren, Bin and Zhang, Linfeng and Hu, Xuming},
   journal={arXiv preprint},
   year={2025}
-}</code></pre>
+}</pre>
+        </div>
     </div>
+</section>
 
-    <footer>
-        <p>Project page for VTC-Bench. Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.</p>
-    </footer>
+<footer>
+    <div class="container">
+        <p>Project page for VTC-Bench.</p>
+        <p style="font-size:0.85rem; margin-top:0.5rem;">Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io" target="_blank">Nerfies</a>.</p>
+    </div>
+</footer>
 
-</div>
+<a href="#top" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
 
 </body>
 </html>
+
