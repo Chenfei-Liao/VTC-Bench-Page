@@ -196,13 +196,6 @@
         </div>
     </header>
 
-    <div class="figure">
-        <img src="Figure2.svg" alt="Average Decline Ratio and inference time">
-        <div class="caption">
-            <strong>Figure 2.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks (Model: Qwen2-VL-7B; Benchmark: as shown in Table 1; Device: 1 A800). (b) Inference time per image comparison of DART and Downsample (Model: Qwen2-VL-7B; Benchmark: MMStar; Compression Ratio: 0.75; Device: 1 A800).
-        </div>
-    </div>
-
     <div class="abstract-box">
         <span class="abstract-title">Abstract</span>
         <p>
@@ -221,6 +214,12 @@
         <p>
             Some data in the existing benchmarks is overly simplistic, leading to the unreasonable phenomenon that even the simplest downsampling method is sufficient to deal with the visual token compression task. This produces the counter-intuitive result that downsampling can outperform sophisticated compression methods, revealing that the benchmarks mix simple and difficult samples.
         </p>
+        <div class="figure">
+            <img src="Figure2.svg" alt="Average Decline Ratio and inference time">
+            <div class="caption">
+                <strong>Figure 2.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks (Model: Qwen2-VL-7B; Benchmark: as shown in Table 1; Device: 1 A800). (b) Inference time per image comparison of DART and Downsample (Model: Qwen2-VL-7B; Benchmark: MMStar; Compression Ratio: 0.75; Device: 1 A800).
+            </div>
+        </div>
     </section>
 
     <section>
@@ -312,7 +311,7 @@
         </div>
         <h3>Major Takeaways</h3>
         <p>
-            Across all benchmarks and compression methods, the accuracy on “simple” samples (Group B) is dramatically higher than on “difficult” samples (Group A); the two groups represent essentially different levels of visual comprehension difficulty. The 0%/100% dichotomy created by image downsampling provides ideal reference points: in Group B, advanced methods show comparable but not superior performance; in Group A, they significantly exceed the downsampling baseline, proving their ability to preserve crucial details. Downsampling thus serves as a filter to denoise benchmarks for visual token compression.
+            Across all benchmarks and compression methods, the accuracy on “simple” samples (Group B) is dramatically higher than on “difficult” samples (Group A); the two groups represent essentially different levels of visual comprehension difficulty. The 0%/100% dichotomy created by image downsampling provides ideal reference points. In Group B, advanced methods show comparable but not superior performance; in Group A, they significantly exceed the downsampling baseline (e.g., VisionZip 51.2% on ChartQA and DART 40.2% on OCRBench at 75% compression), proving their ability to preserve crucial details. Downsampling thus serves as a filter to denoise benchmarks for visual token compression. Moreover, VTC-Bench amplifies gaps: at 75% compression on ChartQA, the VisionZip–FastV gap widens from 8.8% to 16.2%; at 96% compression on GQA, it grows from 0.3% to 9.0%.
         </p>
     </section>
 
