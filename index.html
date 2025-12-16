@@ -1,454 +1,512 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Are We Using the Right Benchmark: An Evaluation Framework for Visual Token Compression Methods</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Are We Using the Right Benchmark: An Evaluation Framework for Visual Token Compression Methods">
+    <meta name="keywords" content="VTC-Bench, Visual Token Compression, MLLM, Qwen2-VL, Evaluation">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VTC-Bench: An Evaluation Framework for Visual Token Compression</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --text-color: #333;
-            --bg-color: #fff;
-            --light-bg: #f8f9fa;
-        }
-
         body {
-            font-family: "Latin Modern Roman", "Computer Modern", "Times New Roman", Times, serif;
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 16px;
             line-height: 1.6;
-            color: var(--text-color);
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            background-color: var(--bg-color);
+            color: #333;
+            background-color: #fcfcfc;
+            margin: 0;
+            padding: 0;
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            color: var(--primary-color);
-            margin-top: 2rem;
-            margin-bottom: 1rem;
+        h1, h2, h3 {
+            font-family: 'Google Sans', sans-serif;
+            color: #202124;
+            font-weight: 600;
         }
 
         h1 {
             font-size: 2.5rem;
+            margin-bottom: 0.5em;
             text-align: center;
-            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.3rem;
+            text-align: center;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+            color: #4a4a4a;
+        }
+
+        a {
+            color: #3273dc;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #1e4b8f;
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        .header-content {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 2rem;
         }
 
         .authors {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
         }
 
-        .author-name {
-            color: var(--accent-color);
-            font-weight: bold;
-            margin: 0 0.5rem;
+        .author-block {
             display: inline-block;
+            margin: 0 10px;
+            white-space: nowrap;
+        }
+        
+        .author-sup {
+            font-size: 0.7em;
+            vertical-align: super;
+            color: #666;
         }
 
         .affiliations {
-            text-align: center;
             font-size: 0.9rem;
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
+            color: #5f6368;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
         }
-
-        .affiliation {
-            display: block;
-            margin-bottom: 0.2rem;
+        
+        .affiliation-block {
+            display: inline-block;
+            margin: 0 8px;
         }
 
         .correspondence {
-            text-align: center;
             font-size: 0.85rem;
+            color: #888;
             font-style: italic;
             margin-bottom: 2rem;
         }
 
-        .abstract-box {
-            background-color: var(--light-bg);
-            border: 1px solid #e1e4e8;
-            padding: 2rem;
-            border-radius: 8px;
+        /* Buttons */
+        .link-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: #363636;
+            color: #fff !important;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-weight: 500;
+            font-size: 1rem;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .btn:hover {
+            background-color: #4a4a4a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        /* Abstract */
+        .abstract-container {
+            background-color: #f5f5f5;
+            padding: 2.5rem;
+            border-radius: 12px;
             margin-bottom: 3rem;
-        }
-
-        .abstract-title {
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-        }
-
-        .section-title {
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 0.5rem;
-            margin-top: 3rem;
-        }
-
-        p {
-            margin-bottom: 1rem;
             text-align: justify;
         }
 
-        .figure-container {
-            margin: 2rem 0;
+        .abstract-title {
+            font-family: 'Google Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        /* Figures */
+        .figure-block {
+            margin: 2.5rem 0;
             text-align: center;
         }
 
-        .figure-container img {
-            max-width: 80%;
+        .figure-block img {
+            max-width: 100%;
             height: auto;
-            border: 1px solid #eee;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .figure-caption {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            color: var(--secondary-color);
-            font-style: italic;
-            padding: 0 10%;
+        .caption {
+            margin-top: 15px;
+            font-size: 0.95rem;
+            color: #4a4a4a;
+            text-align: justify;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            font-family: 'Castoro', serif;
         }
 
-        .table-container {
-            margin: 2rem 0;
+        /* Tables */
+        .table-wrapper {
             overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: #fff;
+            padding: 1rem;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            font-family: 'Google Sans', sans-serif;
+        }
+        
+        .table-caption {
+            font-family: 'Castoro', serif;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #4a4a4a;
         }
 
         th, td {
-            padding: 0.5rem;
+            padding: 12px 8px;
             text-align: center;
-            border: 1px solid #ddd;
+            border-bottom: 1px solid #eee;
         }
 
         th {
-            background-color: var(--light-bg);
-            font-weight: bold;
-        }
-
-        tr:nth-child(even) {
-            background-color: #fcfcfc;
-        }
-
-        .table-caption {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .highlight-row {
-            background-color: #e8f4f8 !important;
-        }
-
-        code {
-            background-color: #f0f0f0;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-
-        .button-container {
-            text-align: center;
-            margin: 2rem 0;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 0 0.5rem;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #2980b9;
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #202124;
+            border-bottom: 2px solid #dfe1e5;
         }
         
-        .sup {
-            vertical-align: super;
-            font-size: smaller;
+        /* Booktabs style lines */
+        tr:first-child th {
+            border-top: 2px solid #333;
+        }
+        tr:last-child td {
+            border-bottom: 2px solid #333;
+        }
+
+        .group-header {
+            background-color: #e8f0fe;
+            color: #1967d2;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 15px;
+        }
+        
+        .highlight-row {
+            background-color: #e6fffa; /* Light teal for emphasis */
+        }
+        
+        .highlight-text {
+            color: #d93025; /* Red for emphasis */
+            font-weight: bold;
+        }
+
+        /* Content Sections */
+        .section-content {
+            text-align: justify;
+            margin-bottom: 2rem;
+            font-family: 'Castoro', serif;
+            font-size: 1.1rem;
+        }
+        
+        .section-content p {
+            margin-bottom: 1.2em;
+        }
+        
+        .list-items {
+            list-style-type: disc;
+            margin-left: 20px;
+            font-family: 'Castoro', serif;
+        }
+        
+        .list-items li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* BibTeX */
+        .bibtex-section {
+            background-color: #f1f3f4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            border-left: 4px solid #3273dc;
+            margin-top: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            font-size: 0.9rem;
+            color: #aaa;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .authors { font-size: 1rem; }
+            .abstract-container { padding: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Are We Using the Right Benchmark: <br>An Evaluation Framework for Visual Token Compression Methods</h1>
+<div class="container">
+    <div class="header-content">
+        <h1>Are We Using the Right Benchmark:<br>An Evaluation Framework for Visual Token Compression Methods</h1>
         
         <div class="authors">
-            <span class="author-name">Chenfei Liao<span class="sup">1,2,6</span></span>
-            <span class="author-name">Wensong Wang<span class="sup">3,2</span></span>
-            <span class="author-name">Zichen Wen<span class="sup">2,5</span></span>
-            <span class="author-name">Xu Zheng<span class="sup">1,4,6</span></span>
-            <span class="author-name">Yiyu Wang<span class="sup">2</span></span><br>
-            <span class="author-name">Haocong He<span class="sup">2</span></span>
-            <span class="author-name">Yuanhuiyi Lyu<span class="sup">1,6</span></span>
-            <span class="author-name">Lutao Jiang<span class="sup">1,6</span></span>
-            <span class="author-name">Xin Zou<span class="sup">1,6</span></span>
-            <span class="author-name">Yuqian Fu<span class="sup">4</span></span>
-            <span class="author-name">Bin Ren<span class="sup">7,8,4</span></span><br>
-            <span class="author-name">Linfeng Zhang<span class="sup">2,*</span></span>
-            <span class="author-name">Xuming Hu<span class="sup">1,6,*</span></span>
+            <span class="author-block">Chenfei Liao<span class="author-sup">1,2,6</span></span>,
+            <span class="author-block">Wensong Wang<span class="author-sup">3,2</span></span>,
+            <span class="author-block">Zichen Wen<span class="author-sup">2,5</span></span>,
+            <span class="author-block">Xu Zheng<span class="author-sup">1,4,6</span></span>,
+            <span class="author-block">Yiyu Wang<span class="author-sup">2</span></span>,<br>
+            <span class="author-block">Haocong He<span class="author-sup">2</span></span>,
+            <span class="author-block">Yuanhuiyi Lyu<span class="author-sup">1,6</span></span>,
+            <span class="author-block">Lutao Jiang<span class="author-sup">1,6</span></span>,
+            <span class="author-block">Xin Zou<span class="author-sup">1,6</span></span>,
+            <span class="author-block">Yuqian Fu<span class="author-sup">4</span></span>,
+            <span class="author-block">Bin Ren<span class="author-sup">7,8,4</span></span>,<br>
+            <span class="author-block">Linfeng Zhang<span class="author-sup">2,*</span></span>,
+            <span class="author-block">Xuming Hu<span class="author-sup">1,6,*</span></span>
         </div>
 
         <div class="affiliations">
-            <span class="affiliation"><span class="sup">1</span>Hong Kong University of Science and Technology (Guangzhou)</span>
-            <span class="affiliation"><span class="sup">2</span>Shanghai Jiao Tong University</span>
-            <span class="affiliation"><span class="sup">3</span>Northeastern University</span>
-            <span class="affiliation"><span class="sup">4</span>INSAIT, Sofia University “St. Kliment Ohridski”</span>
-            <span class="affiliation"><span class="sup">5</span>Shanghai AI Laboratory</span>
-            <span class="affiliation"><span class="sup">6</span>Hong Kong University of Science and Technology</span>
-            <span class="affiliation"><span class="sup">7</span>University of Pisa</span>
-            <span class="affiliation"><span class="sup">8</span>University of Trento</span>
-        </div>
-
-        <div class="correspondence">
-            * Corresponding authors.
+            <span class="affiliation-block"><span class="author-sup">1</span>HKUST (Guangzhou)</span>
+            <span class="affiliation-block"><span class="author-sup">2</span>Shanghai Jiao Tong University</span>
+            <span class="affiliation-block"><span class="author-sup">3</span>Northeastern University</span>
+            <span class="affiliation-block"><span class="author-sup">4</span>INSAIT</span><br>
+            <span class="affiliation-block"><span class="author-sup">5</span>Shanghai AI Laboratory</span>
+            <span class="affiliation-block"><span class="author-sup">6</span>HKUST</span>
+            <span class="affiliation-block"><span class="author-sup">7</span>University of Pisa</span>
+            <span class="affiliation-block"><span class="author-sup">8</span>University of Trento</span>
         </div>
         
-        <div class="button-container">
-            <a href="https://github.com/Chenfei-Liao/VTC-Bench" class="btn">View Code on GitHub</a>
-            <!-- <a href="#" class="btn">Read Paper (ArXiv)</a> -->
+        <div class="correspondence">
+            * Corresponding authors
         </div>
-    </header>
 
-    <div class="abstract-box">
-        <div class="abstract-title">Abstract</div>
+        <div class="link-buttons">
+            <a href="https://github.com/Chenfei-Liao/VTC-Bench" class="btn">
+                <i class="fab fa-github"></i> Code
+            </a>
+            <!-- Placeholder for Paper link if available -->
+             <a href="#" class="btn" style="background-color: #d1d1d1; cursor: not-allowed;">
+                <i class="fas fa-file-pdf"></i> Paper (Coming Soon)
+            </a>
+            <!-- Placeholder for Data link -->
+             <a href="#" class="btn" style="background-color: #d1d1d1; cursor: not-allowed;">
+                <i class="fas fa-database"></i> Data (Coming Soon)
+            </a>
+        </div>
+    </div>
+
+    <div class="abstract-container">
+        <h2 class="abstract-title">Abstract</h2>
         <p>
             Recent endeavors to accelerate inference in Multimodal Large Language Models (MLLMs) have primarily focused on visual token compression. The effectiveness of these methods is typically assessed by measuring the accuracy drop on established benchmarks, comparing model performance before and after compression. However, these benchmarks are originally designed to assess the perception and reasoning capabilities of MLLMs, rather than to evaluate compression techniques. As a result, directly applying them to visual token compression introduces a task mismatch. Strikingly, our investigation reveals that <strong>simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks</strong>.
         </p>
         <p>
-            Through extensive experiments, we make the following observations: (i) Current benchmarks are noisy for the visual token compression task. (ii) Down-sampling is able to serve as a data filter to evaluate the difficulty of samples in the visual token compression task. Motivated by these findings, we introduce <strong>VTC-Bench</strong>, an evaluation framework that incorporates a data filtering mechanism to denoise existing benchmarks, thereby enabling fairer and more accurate assessment of visual token compression methods.
+            Through extensive experiments, we make the following observations: 
+            <br>(i) Current benchmarks are noisy for the visual token compression task. 
+            <br>(ii) Down-sampling is able to serve as a data filter to evaluate the difficulty of samples in the visual token compression task. 
+            <br>Motivated by these findings, we introduce <strong>VTC-Bench</strong>, an evaluation framework that incorporates a data filtering mechanism to denoise existing benchmarks, thereby enabling fairer and more accurate assessment of visual token compression methods.
         </p>
     </div>
 
-    <section id="introduction">
-        <h2 class="section-title">1. Introduction</h2>
-        <p>
-            Multimodal Large Language Models (MLLMs) have shown impressive abilities in understanding, reasoning, and generating content across vision and language, enabling applications such as embodied AI. However, their efficiency is often constrained by the high computational cost of processing images, particularly at high resolutions. This bottleneck arises because visual tokens, derived from image patches, typically far outnumber textual tokens, leading to substantial memory consumption and inference latency. To mitigate this issue, numerous visual token compression methods have been proposed to reduce redundancy while retaining essential visual information.
-        </p>
-        <p>
-            Yet, these methods are typically evaluated on general MLLM benchmarks, which are not designed for compression, therefore failing to provide appropriate evaluation criteria. Thus, in this paper, we uncover a surprising finding: as in Figure 2, <strong>simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks.</strong> This suggests that current evaluation frameworks don't adequately capture the challenges inherent in visual token compression.
-        </p>
-        
-        <div class="figure-container">
-            <img src="Figure2.svg" alt="Average Decline Ratio and inference time comparison">
-            <div class="figure-caption">
-                <strong>Figure 2.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks (Model: Qwen2-VL-7B; Benchmark: as shown in Table 1; Device: 1 A800). (b) Inference time per image comparison of DART and Downsample (Model: Qwen2-VL-7B; Benchmark: MMstar; Compression Ratio: 0.75; Device: 1 A800).
-            </div>
+    <!-- Motivation Figure Area -->
+    <div class="figure-block">
+        <img src="Figure2.svg" alt="Motivation: Downsampling outperforms advanced methods">
+        <div class="caption">
+            <strong>Figure 2.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks (Model: Qwen2-VL-7B; Device: 1 A800). (b) Inference time per image comparison of DART and Downsample. Surprisingly, simple downsampling consistently outperforms many advanced compression methods.
         </div>
+    </div>
 
+    <div class="section-content">
+        <h2>1. Motivation: Simplicity Bias</h2>
         <p>
-            To investigate this, we conduct a comprehensive empirical study comparing multiple state-of-the-art visual token compression methods against a simple downsampling baseline across eight widely used benchmarks. Based on the study results, two crucial findings are concluded:
+            Multimodal Large Language Models (MLLMs) have shown impressive abilities, but their efficiency is constrained by high computational costs. Numerous visual token compression methods have been proposed to reduce redundancy. Yet, these methods are typically evaluated on general MLLM benchmarks not designed for compression.
         </p>
-        <ul>
-            <li>The counterintuitive phenomenon mentioned above generally exists in popular benchmarks, proving that <em>current benchmarks are noisy for the visual token compression task</em>.</li>
-            <li>The correct sample group under downsampling methods has achieved significantly better accuracy than the incorrect sample group under downsampling methods across various compression methods and benchmarks, proving that <em>downsampling can serve as a data filter to evaluate the difficulty of samples upon the visual token compression task.</em></li>
+        <p>
+            We uncover a surprising finding: <strong>simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks.</strong> This suggests that current evaluation frameworks fail to capture the challenges inherent in visual token compression.
+        </p>
+        <p>
+            Two crucial findings are concluded from our empirical study:
+        </p>
+        <ul class="list-items">
+            <li><strong>Current benchmarks are noisy:</strong> The counterintuitive phenomenon generally exists in popular benchmarks.</li>
+            <li><strong>Downsampling as a filter:</strong> The correct sample group under downsampling achieves significantly better accuracy than the incorrect group, proving downsampling can serve as a difficulty filter.</li>
         </ul>
-        <p>
-            Based on these findings, we propose VTC-Bench, a new evaluation framework specifically designed to optimize and denoise current existing benchmarks, aiming to evaluate visual token compression methods fairly.
-        </p>
-    </section>
+    </div>
 
-    <section id="related-work">
-        <h2 class="section-title">2. Related Work</h2>
+    <div class="section-content">
+        <h2>2. VTC-Bench Framework</h2>
         <p>
-            Since visual tokens typically outnumber text tokens in MLLMs, compressing visual tokens has emerged as a promising strategy to accelerate inference. Leveraging the inherent redundancy in visual tokens, a variety of <em>training-free</em> methods have been proposed. FastV, the first to explore visual token compression in MLLMs, prunes redundant tokens based on their average attention scores. Building on this idea, SparseVLM introduces a recycling strategy to achieve more compact and flexible compression. Other methods, such as PyramidDrop, FiCoCo-V, and MustDrop, divide the compression process into multiple stages, enabling more precise identification of redundant tokens. In contrast, DART departs from importance-based selection entirely and instead prioritizes token duplication as a key criterion, achieving surprisingly strong compression performance.
+            We propose <strong>VTC-Bench</strong>, a new evaluation framework designed to optimize and denoise existing benchmarks. By explicitly distinguishing between “simple” and “difficult” samples through downsampling, VTC-Bench adaptively selects samples that truly evaluate compression capabilities.
         </p>
-        <p>
-            Existing MLLM benchmarks primarily focus on areas such as perception and reasoning (e.g., MME, MMBench, SEED-Bench, MM-Vet). For visual token compression in MLLMs, only one benchmark currently exists: EffiVLM. It offers a unified framework for benchmarking training-free acceleration methods but relies on existing datasets rather than data tailored to token compression. Building on data-driven insights into compression behavior, we introduce <strong>VTC-Bench</strong>, the first dedicated, challenging evaluation framework for visual token compression in MLLMs.
-        </p>
-    </section>
+    </div>
 
-    <section id="experiments">
-        <h2 class="section-title">3. Experiments & Findings</h2>
+    <div class="figure-block">
+        <img src="Figure1.svg" alt="VTC-Bench Framework Pipeline">
+        <div class="caption">
+            <strong>Figure 1. The VTC-Bench Framework.</strong> A simple but effective framework that transforms any existing benchmark into a subset that fairly evaluates Visual Token Compression (VTC) methods. It uses downsampling performance as a discriminator to separate "Simple" from "Difficult" samples.
+        </div>
+    </div>
+
+    <div class="section-content">
+        <h3>Grouping Logic</h3>
         <p>
-            In order to further investigate the causes of the anomalous phenomenon where image downsampling exceeds sophisticated methods, we comprehensively compare the results of the downsampling methods with other methods under various settings. We choose Qwen2-VL in our comparison experiments, which supports the downsampling method the best. We select four typical token compression methods (FastV, VisionZip, PruMerge+, and DART) and choose eight popular benchmarks (GQA, MMBench_EN, MMBench_CN, MME, POPE, MMStar, OCRBench, and ChartQA).
+            The pipeline consists of three critical steps:
+        </p>
+        <ol class="list-items">
+            <li><strong>Inference & Compression:</strong> Run a downsampling baseline (the filter) and advanced compression methods.</li>
+            <li><strong>Grouping:</strong> Use the performance of the downsampling method to categorize samples:
+                <ul>
+                    <li><strong>Group A (Difficult Samples):</strong> Answered <span style="color:#d93025; font-weight:bold;">incorrectly</span> by downsampling.</li>
+                    <li><strong>Group B (Simple Samples):</strong> Answered <span style="color:#188038; font-weight:bold;">correctly</span> by downsampling.</li>
+                </ul>
+            </li>
+            <li><strong>Result Aggregation:</strong> Perform statistical analysis on the "difficult" samples to obtain a fair indicator.</li>
+        </ol>
+    </div>
+
+    <div class="section-content">
+        <h2>3. Experiments & Findings</h2>
+        <p>
+            When evaluated using VTC-Bench (focusing on "Difficult Samples"), the landscape of visual token compression changes completely. Advanced methods prove their worth where it matters most, while downsampling (by definition) fails on these difficult samples.
         </p>
 
-        <div class="table-container">
-            <div class="table-caption">Table 1: Comparison of Advanced Token Compression Methods and Downsampling on Qwen2-VL-7B. ADR refers to the average decline ratio.</div>
+        <div class="table-wrapper">
+            <div class="table-caption">Table 1: Comparison of Advanced Token Compression Methods and Downsampling on Qwen2-VL-7B. <br>(ADR: Average Decline Ratio)</div>
             <table>
                 <thead>
                     <tr>
                         <th>Method</th>
                         <th>GQA</th>
                         <th>MMB</th>
-                        <th>MMB<sup>CN</sup></th>
                         <th>MME</th>
                         <th>POPE</th>
                         <th>MMStar</th>
-                        <th>OCRBench</th>
                         <th>ChartQA</th>
                         <th>ADR</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="10" style="background-color: #f0f0f0;"><strong>Upper Bound: All Tokens (100%)</strong></td></tr>
-                    <tr><td>Vanilla</td><td>62.3</td><td>78.9</td><td>78.0</td><td>2306</td><td>88.4</td><td>57.1</td><td>80.7</td><td>81.6</td><td>100.0</td></tr>
-                    <tr><td colspan="10" style="background-color: #f0f0f0;"><strong>Token Reduction (↓ 75.00%)</strong></td></tr>
-                    <tr><td>FastV</td><td>57.0</td><td>73.7</td><td>73.1</td><td>2083</td><td>84.5</td><td>44.6</td><td>42.0</td><td>58.1</td><td>83.2</td></tr>
-                    <tr><td>VisionZip</td><td>58.6</td><td>71.1</td><td>70.5</td><td>2062</td><td>87.1</td><td>47.2</td><td>42.1</td><td>66.9</td><td>84.9</td></tr>
-                    <tr><td>PruMerge+</td><td>59.4</td><td>72.1</td><td>72.0</td><td>2044</td><td>87.2</td><td>48.0</td><td>33.9</td><td>56.2</td><td>82.7</td></tr>
-                    <tr><td>DART</td><td>56.9</td><td>72.5</td><td>70.2</td><td>2066</td><td>84.7</td><td>47.2</td><td>52.5</td><td>52.7</td><td>83.9</td></tr>
-                    <tr class="highlight-row"><td>+ Downsample</td><td>59.2</td><td>75.0</td><td>73.8</td><td>2259</td><td>86.2</td><td>50.1</td><td>64.9</td><td>65.0</td><td>91.0</td></tr>
-                    <!-- Skipped some rows for brevity but keeping main comparison -->
-                    <tr><td colspan="10" style="background-color: #f0f0f0;"><strong>Token Reduction (↓ 93.75%)</strong></td></tr>
-                    <tr><td>FastV</td><td>49.0</td><td>57.1</td><td>57.9</td><td>1684</td><td>74.9</td><td>37.5</td><td>18.7</td><td>20.6</td><td>62.1</td></tr>
-                    <tr class="highlight-row"><td>+ Downsample</td><td>52.6</td><td>66.4</td><td>66.8</td><td>1994</td><td>79.5</td><td>40.9</td><td>40.3</td><td>12.7</td><td>71.0</td></tr>
+                    <tr class="group-header"><td colspan="8">Token Reduction (↓ 75.00%)</td></tr>
+                    <tr><td>FastV</td><td>57.0</td><td>73.7</td><td>2083</td><td>84.5</td><td>44.6</td><td>58.1</td><td>83.2</td></tr>
+                    <tr><td>VisionZip</td><td>58.6</td><td>71.1</td><td>2062</td><td>87.1</td><td>47.2</td><td>66.9</td><td>84.9</td></tr>
+                    <tr><td>DART</td><td>56.9</td><td>72.5</td><td>2066</td><td>84.7</td><td>47.2</td><td>52.7</td><td>83.9</td></tr>
+                    <tr class="highlight-row" style="font-weight:bold;"><td>+ Downsample</td><td>59.2</td><td>75.0</td><td>2259</td><td>86.2</td><td>50.1</td><td>65.0</td><td>91.0</td></tr>
                 </tbody>
             </table>
+            <div style="font-size:0.8rem; color:#666; margin-top:5px; text-align:center;">* Simplified table. See paper for full results.</div>
         </div>
 
-        <p>
-            <strong>Comparison between Different Methods:</strong> Across a wide range of compression ratios and general-purpose benchmarks, naive image downsampling achieves superior performance compared to sophisticated token compression methods in most conditions. For instance, at 93.75% compression, downsampling achieves 66.4% on MMBench, outperforming the best advanced method, DART, by a 24.3% relative improvement. The results verify that <em>a substantial portion of samples in general-purpose benchmarks can be correctly answered using only low-resolution global information.</em>
-        </p>
-
-        <h3>Hypothesis & Validation</h3>
-        <p>
-            We propose a bold hypothesis: <em>Some data in the existing benchmarks is overly simplistic, leading to the unreasonable phenomenon that even the simplest downsampling method is sufficient to deal with the visual token compression task.</em>
-        </p>
-        <p>
-            To validate this, we categorize samples into two groups based on the performance of the downsampling method:
-            <ul>
-                <li><strong>Group A (Difficult Samples):</strong> Samples answered incorrectly by the downsampling method.</li>
-                <li><strong>Group B (Simple Samples):</strong> Samples answered correctly by the downsampling method.</li>
-            </ul>
-        </p>
-
-        <div class="figure-container">
-            <img src="Figure4.svg" alt="Group A vs Group B comparison">
-            <div class="figure-caption">
-                <strong>Figure 4.</strong> Comparison of advanced token compression methods and downsampling on Qwen2-VL-7B by groups at 75% compression.
+        <div class="figure-block">
+            <img src="Figure4.svg" alt="Group A vs Group B comparison" style="max-width: 80%;">
+            <div class="caption">
+                <strong>Figure 4.</strong> Comparison of advanced token compression methods and downsampling on Qwen2-VL-7B by groups at 75% compression. Note the huge gap between Group B (Simple) and Group A (Difficult).
             </div>
         </div>
 
-        <div class="table-container">
-            <div class="table-caption">Table 2: Comparison of advanced token compression methods and downsampling on Qwen2-VL-7B by groups.</div>
+        <div class="section-content">
+            <h3>Performance on "Difficult Samples" (Group A)</h3>
+            <p>
+                <strong>Is downsampling all you need?</strong> No. VTC-Bench overturns this impression. When restricted to compression-relevant <em>difficult samples</em> (Group A), advanced methods significantly outperform the baseline.
+            </p>
+        </div>
+
+        <div class="table-wrapper">
+            <div class="table-caption">Table 2: Performance on "Difficult Samples" (Group A) at 75% Compression.</div>
             <table>
                 <thead>
                     <tr>
                         <th>Method</th>
                         <th>GQA</th>
                         <th>MMB</th>
-                        <th>MMB<sup>CN</sup></th>
                         <th>MME</th>
                         <th>POPE</th>
                         <th>MMStar</th>
-                        <th>OCRBench</th>
                         <th>ChartQA</th>
                         <th>Average</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="10" style="background-color: #f0f0f0;"><strong>Group B (Simple) - 75.00% Reduction</strong></td></tr>
-                    <tr><td>FastV</td><td>87.6</td><td>95.9</td><td>95.8</td><td>96.7</td><td>94.8</td><td>76.0</td><td>57.2</td><td>78.1</td><td>85.3</td></tr>
-                    <tr><td>VisionZip</td><td>91.2</td><td>93.8</td><td>93.6</td><td>95.3</td><td>96.8</td><td>81.4</td><td>58.1</td><td>87.3</td><td>87.2</td></tr>
-                    <tr><td>Downsample</td><td>100.0</td><td>100.0</td><td>100.0</td><td>100.0</td><td>100.0</td><td>100.0</td><td>100.0</td><td>100.0</td><td>100.0</td></tr>
-                    <tr><td colspan="10" style="background-color: #f0f0f0;"><strong>Group A (Difficult) - 75.00% Reduction</strong></td></tr>
-                    <tr><td>FastV</td><td>57.8</td><td>45.2</td><td>56.5</td><td>78.9</td><td>65.4</td><td>41.0</td><td>29.1</td><td>35.0</td><td>51.1</td></tr>
-                    <tr><td>VisionZip</td><td>59.3</td><td>42.4</td><td>42.2</td><td>54.9</td><td>72.5</td><td>45.9</td><td>29.6</td><td>51.2</td><td>49.8</td></tr>
-                    <tr><td>DART</td><td>58.9</td><td>54.8</td><td>52.2</td><td>67.6</td><td>69.4</td><td>47.0</td><td>40.2</td><td>39.0</td><td>53.6</td></tr>
-                    <tr><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
+                    <tr><td>FastV</td><td>57.8</td><td>45.2</td><td>78.9</td><td>65.4</td><td>41.0</td><td>35.0</td><td>51.1</td></tr>
+                    <tr><td>VisionZip</td><td>59.3</td><td>42.4</td><td>54.9</td><td>72.5</td><td>45.9</td><td>51.2</td><td>49.8</td></tr>
+                    <tr><td>DART</td><td>58.9</td><td>54.8</td><td>67.6</td><td>69.4</td><td>47.0</td><td>39.0</td><td>53.6</td></tr>
+                    <tr style="background-color:#ffebeb;"><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
                 </tbody>
             </table>
         </div>
-        
-        <p>
-            Across all benchmarks and compression methods, the accuracy on “simple” samples (Group B) is dramatically higher than on “difficult” samples (Group A). The existence of this gap validates our core hypothesis that the benchmark comprises a mixture of simple and difficult samples.
-        </p>
-    </section>
 
-    <section id="framework">
-        <h2 class="section-title">4. VTC-Bench Evaluation Framework</h2>
-        <p>
-            To address the simplicity bias and denoise existing benchmarks, we propose the <strong>VTC-Bench</strong> framework. The construction is based on the key insight that "downsampling can serve as a clever filter to distinguish between 'simple' and 'difficult' samples". We leverage this idea to construct a challenging benchmark comprising predominantly “difficult” samples that require fine-grained visual understanding.
-        </p>
-
-        <div class="figure-container">
-            <img src="Figure1.svg" alt="VTC-Bench Framework">
-            <div class="figure-caption">
-                <strong>Figure 1.</strong> The VTC-Bench is a simple but effective framework that can transform any existing benchmarks to a subset that can fairly evaluate VTC (Visual Token Compression) methods.
-            </div>
-        </div>
-
-        <p>The pipeline consists of three critical steps:</p>
-        <ol>
-            <li><strong>Inference & Compression:</strong> Run a downsampling baseline (the filter) and advanced compression methods.</li>
-            <li><strong>Grouping:</strong> Use the performance of the downsampling method as a binary discriminator to categorize samples into Group A (Difficult) and Group B (Simple).</li>
-            <li><strong>Result Aggregation:</strong> Perform statistical analysis on the accuracy of the "difficult" samples to obtain an indicator that truly reflects visual compression methods.</li>
-        </ol>
-
-        <div class="figure-container">
-            <img src="Figure3.svg" alt="VTC-Bench results">
-            <div class="figure-caption">
+        <div class="figure-block">
+            <img src="Figure3.svg" alt="VTC-Bench results summary" style="max-width: 80%;">
+            <div class="caption">
                 <strong>Figure 3.</strong> VTC-Bench results on Qwen2-VL-7B.
             </div>
         </div>
 
-        <div class="table-container">
-            <div class="table-caption">Table 3: VTC-Bench results on Qwen2-VL-7B (Focusing on Difficult Samples).</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Method</th>
-                        <th>GQA</th>
-                        <th>MMB</th>
-                        <th>MMB<sup>CN</sup></th>
-                        <th>MME</th>
-                        <th>POPE</th>
-                        <th>MMStar</th>
-                        <th>OCRBench</th>
-                        <th>ChartQA</th>
-                        <th>Average</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td colspan="10" style="background-color: #f0f0f0;"><strong>Token Reduction (↓ 75.00%)</strong></td></tr>
-                    <tr><td>FastV</td><td>57.8</td><td>45.2</td><td>56.5</td><td>78.9</td><td>65.4</td><td>41.0</td><td>29.1</td><td>35.0</td><td>51.1</td></tr>
-                    <tr><td>VisionZip</td><td>59.3</td><td>42.4</td><td>42.2</td><td>54.9</td><td>72.5</td><td>45.9</td><td>29.6</td><td>51.2</td><td>49.8</td></tr>
-                    <tr><td>PruMerge+</td><td>57.7</td><td>51.2</td><td>52.6</td><td>62.0</td><td>72.1</td><td>48.1</td><td>21.2</td><td>40.5</td><td>50.7</td></tr>
-                    <tr><td>DART</td><td>58.9</td><td>54.8</td><td>52.2</td><td>67.6</td><td>69.4</td><td>47.0</td><td>40.2</td><td>39.0</td><td>53.6</td></tr>
-                    <tr><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
-                </tbody>
-            </table>
+        <div class="section-content">
+            <h3>Appendix: Results on LLaVA-OV-7B</h3>
+            <p>
+                We also validated VTC-Bench on other MLLMs. Table 4 shows the results on LLaVA-OV-7B.
+            </p>
         </div>
-        
-        <p>
-            <strong>Is downsampling all you need?</strong> VTC-Bench overturns the impression that sophisticated approaches are unnecessary. When we restrict evaluation to the compression-relevant <em>difficult samples</em> (Group A), the trend reverses. The apparent superiority of downsampling largely stems from original benchmarks being saturated with <em>easy</em> cases.
-        </p>
-    </section>
 
-    <section id="conclusion">
-        <h2 class="section-title">5. Conclusion</h2>
-        <p>
-            This paper systematically analyzes the task mismatch problem presented in current MLLM benchmarks when evaluating visual token compression methods. Based on a surprising and counterintuitive finding: simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks, we conduct a comprehensive empirical study across several advanced visual token compression methods.
-        </p>
-        <p>
-            Thus, two crucial findings are concluded: (1) Current benchmarks are noisy for the visual token compression task. (2) Downsampling can serve as a data filter to evaluate the difficulty of samples upon the visual token compression task. Furthermore, we propose VTC-Bench, a new evaluation framework specifically designed to optimize and denoise current existing benchmarks by explicitly distinguishing between “simple” and “difficult” samples through downsampling.
-        </p>
-    </section>
-    
-    <section id="appendix">
-        <h2 class="section-title">Appendix: Comprehensive Results</h2>
-        <div class="table-container">
+        <div class="table-wrapper">
             <div class="table-caption">Table 4: VTC-Bench results on LLaVA-OV-7B.</div>
             <table>
                 <thead>
@@ -462,15 +520,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="6" style="background-color: #f0f0f0;"><strong>Token Reduction (↓ 75.00%)</strong></td></tr>
+                    <tr class="group-header"><td colspan="6">Token Reduction (↓ 75.00%)</td></tr>
                     <tr><td>FastV</td><td>54.3</td><td>70.5</td><td>69.1</td><td>63.8</td><td>48.6</td></tr>
                     <tr><td>VisionZip</td><td>59.0</td><td>67.7</td><td>71.3</td><td>80.8</td><td>44.8</td></tr>
                     <tr><td>PruMerge+</td><td>60.4</td><td>74.2</td><td>73.5</td><td>75.6</td><td>48.6</td></tr>
-                    <tr><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
+                    <tr style="background-color:#ffebeb;"><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
                 </tbody>
             </table>
         </div>
-    </section>
+    </div>
+
+    <div class="section-content">
+        <h2>4. Conclusion</h2>
+        <p>
+            This paper systematically analyzes the task mismatch problem in current MLLM benchmarks for visual token compression. We find that current benchmarks are noisy and that simple downsampling often outperforms advanced methods due to simplicity bias.
+        </p>
+        <p>
+            <strong>VTC-Bench</strong> serves as a robust filter to evaluate the difficulty of samples. By explicitly distinguishing between “simple” and “difficult” samples, it provides a fairer platform to demonstrate the true value of advanced compression techniques—preserving information where downsampling fails.
+        </p>
+    </div>
+
+    <div class="bibtex-section">
+        <h3>Citation</h3>
+        <pre><code>@article{liao2025vtcbench,
+  title={Are We Using the Right Benchmark: An Evaluation Framework for Visual Token Compression Methods},
+  author={Liao, Chenfei and Wang, Wensong and Wen, Zichen and Zheng, Xu and Wang, Yiyu and He, Haocong and Lyu, Yuanhuiyi and Jiang, Lutao and Zou, Xin and Fu, Yuqian and Ren, Bin and Zhang, Linfeng and Hu, Xuming},
+  journal={arXiv preprint},
+  year={2025}
+}</code></pre>
+    </div>
+
+    <footer>
+        <p>Project page for VTC-Bench. Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.</p>
+    </footer>
+
+</div>
 
 </body>
 </html>
