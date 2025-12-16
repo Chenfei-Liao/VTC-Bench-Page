@@ -188,68 +188,61 @@
         </div>
 
         <div class="link-buttons">
-            <a href="paper.pdf" class="btn" target="_blank"><i class="fas fa-file-pdf"></i> Paper (PDF)</a>
-            <a href="https://arxiv.org/abs/2510.07143" class="btn" target="_blank"><i class="fas fa-external-link-alt"></i> arXiv</a>
+            <a href="https://arxiv.org/abs/2510.07143" class="btn" target="_blank"><i class="fas fa-file-pdf"></i> Paper (arXiv)</a>
             <a href="https://github.com/Chenfei-Liao/VTC-Bench" class="btn" target="_blank"><i class="fab fa-github"></i> Code & Data</a>
         </div>
     </header>
 
     <div class="figure">
-        <img src="https://via.placeholder.com/850x300?text=Figure+1:+Average+Decline+Ratio+Comparison+(Downsampling+vs+SOTA)" alt="Teaser: Downsampling outperforms SOTA">
+        <object data="Figure1.pdf" type="application/pdf" width="100%" height="480px">
+            <a href="Figure1.pdf">Figure 1 PDF</a>
+        </object>
         <div class="caption">
-            <strong>Figure 1: The Surprising Observation.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks. Strikingly, simple <strong>Downsample</strong> (grey line) outperforms many advanced methods like VisionZip and FastV. (b) [cite_start]Despite its simplicity, Downsample achieves significantly faster inference times[cite: 35, 36].
+            <strong>Figure 1.</strong> Simple downsampling can match or surpass advanced compression on existing benchmarks, revealing a simplicity bias.
         </div>
     </div>
 
     <div class="abstract-box">
         <span class="abstract-title">Abstract</span>
         <p>
-            Recent endeavors to accelerate inference in Multimodal Large Language Models (MLLMs) have primarily focused on visual token compression. [cite_start]However, current benchmarks are originally designed to assess perception and reasoning, rather than compression techniques[cite: 9, 11].
+            Multimodal LLMs rely on visual token compression to speed up inference. Yet mainstream benchmarks were built for perception/reasoning, not for testing fidelity under compression. We find that <strong>simple image downsampling</strong> often matches or exceeds state-of-the-art compression methods, implying many samples are insensitive to fine-grained visual details.
         </p>
         <p>
-            [cite_start]In this work, we reveal a surprising finding: <strong>simple image downsampling consistently outperforms many advanced compression methods</strong> across multiple widely used benchmarks[cite: 13]. This suggests that current benchmarks are "noisy" for this task—they contain too many simple samples that do not require fine-grained visual details.
+            We introduce <strong>VTC-Bench</strong>, a framework that uses downsampling as a discriminator to split data into <strong>Group B (Simple)</strong>—samples still correct after aggressive downsampling—and <strong>Group A (Difficult)</strong>—samples that fail after downsampling. Evaluating compression on Group A yields a difficulty-aware, fairer comparison.
         </p>
         <p>
-            [cite_start]Motivated by this, we introduce <strong>VTC-Bench</strong>, an evaluation framework that uses downsampling as a data filter to distinguish between "simple" and "difficult" samples, enabling a fairer and more accurate assessment of visual token compression methods[cite: 16].
+            On Group A, advanced methods show clear gains over naive downsampling; on Group B the gains vanish. VTC-Bench thus exposes the true strengths of visual token compression methods.
         </p>
     </div>
 
     <section>
-        <h2>1. The Problem: Simplicity Bias in Benchmarks</h2>
+        <h2>1. Motivation: Simplicity Bias in Current Benchmarks</h2>
         <p>
-            Most MLLMs (like Qwen2-VL) natively support varying resolution inputs. [cite_start]We compared sophisticated token compression methods (FastV, VisionZip, PruMerge+, DART) against a naive baseline: simply resizing the image to a lower resolution (Downsample)[cite: 78, 92].
-        </p>
-        <p>
-            The results were counterintuitive. As compression ratios increased (e.g., 99%), advanced methods collapsed, while Downsampling degraded gracefully. [cite_start]For instance, at 93.75% compression on MMBench, Downsampling achieved <strong>66.4%</strong> accuracy, outperforming the best advanced method (DART) by a significant margin[cite: 99].
-        </p>
-        <p>
-            <strong>Hypothesis:</strong> Existing benchmarks are dominated by samples that only require low-resolution global information. [cite_start]We define these as "Simple Samples"[cite: 141, 142].
+            Many benchmarks can be solved with low-resolution cues, masking the benefits of sophisticated compression. Downsampling alone can retain accuracy while reducing tokens, exposing the simplicity bias.
         </p>
     </section>
 
     <section>
-        <h2>2. The Solution: VTC-Bench Framework</h2>
+        <h2>2. VTC-Bench Framework</h2>
         <p>
-            To denoise the evaluation, we propose <strong>VTC-Bench</strong>. It does not create new data but filters existing benchmarks (like GQA, MMBench, ChartQA) using downsampling as a discriminator.
+            We filter existing benchmarks (e.g., GQA, MMBench, ChartQA, MME) by comparing original vs. downsampled performance:
         </p>
 
         <div class="figure">
-            <img src="https://via.placeholder.com/850x350?text=Figure+3:+VTC-Bench+Pipeline+(Filter+Logic)" alt="VTC-Bench Pipeline">
+            <object data="Figure2.pdf" type="application/pdf" width="100%" height="420px">
+                <a href="Figure2.pdf">Figure 2 PDF</a>
+            </object>
             <div class="caption">
-                <strong>Figure 2: The VTC-Bench Pipeline.</strong> We categorize samples into two groups. <strong>Group B (Simple):</strong> Samples correctly answered by the downsampling method. <strong>Group A (Difficult):</strong> Samples answered incorrectly by downsampling. [cite_start]We evaluate compression methods specifically on Group A to assess their ability to preserve critical details[cite: 168, 210].
+                <strong>Figure 2.</strong> VTC-Bench pipeline: Group B (Simple) remains correct after downsampling; Group A (Difficult) fails after downsampling.
             </div>
         </div>
 
-        <h3>The Logic</h3>
-        <p>
-            For a target compression ratio \( C \), we apply an equivalent downsampling ratio \( D \) such that:
-        </p>
-        <p style="text-align: center; font-size: 1.2rem; margin: 20px 0;">
-            $$ \frac{1}{D^2} \times 100\% = 1 - C $$
-        </p>
-        <p>
-            We then filter out samples where the downsampling baseline is already correct (100% accuracy definition in Group B). [cite_start]This leaves us with the samples that genuinely require the capabilities of advanced compression algorithms[cite: 95, 153].
-        </p>
+        <h3>Grouping Logic</h3>
+        <ul>
+            <li><strong>Group B (Simple):</strong> Origin correct & downsample correct.</li>
+            <li><strong>Group A (Difficult):</strong> Origin correct & downsample wrong.</li>
+        </ul>
+        <p>We focus evaluation on Group A to measure detail preservation and robustness under compression.</p>
     </section>
 
     <section>
@@ -303,9 +296,9 @@
 
         <h3>Major Takeaways</h3>
         <ul>
-            [cite_start]<li><strong>Reversing the Trend:</strong> While Downsampling wins on the full noisy benchmark, advanced methods significantly outperform the baseline on the filtered VTC-Bench[cite: 225].</li>
-            [cite_start]<li><strong>Task Sensitivity:</strong> Tasks requiring fine-grained visual understanding (like charts and OCR) show the largest gaps between sophisticated compression and naive downsampling[cite: 246].</li>
-            [cite_start]<li><strong>Fairer Comparison:</strong> VTC-Bench amplifies the differences between methods, allowing researchers to see which algorithms truly retain critical visual context[cite: 245].</li>
+            <li><strong>Reversing the Trend:</strong> On the full benchmark downsampling looks strong, but on the filtered VTC-Bench advanced methods clearly outperform it.</li>
+            <li><strong>Task Sensitivity:</strong> Fine-grained tasks (e.g., charts, OCR) show the largest gaps between sophisticated compression and naive downsampling.</li>
+            <li><strong>Fairer Comparison:</strong> VTC-Bench magnifies differences, revealing which methods truly retain critical visual context.</li>
         </ul>
     </section>
 
