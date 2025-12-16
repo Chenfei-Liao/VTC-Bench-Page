@@ -101,11 +101,14 @@
             text-align: center;
         }
         .figure img {
-            max-width: 100%;
+            max-width: 70%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             margin-bottom: 10px;
+        }
+        .figure img.wide {
+            max-width: 85%;
         }
         .caption {
             font-size: 0.9rem;
@@ -216,7 +219,7 @@
     <section>
         <h2>1. Motivation: Simplicity Bias in Current Benchmarks</h2>
         <p>
-            Some data in the existing benchmarks is overly simplistic, leading to the unreasonable phenomenon that even the simplest downsampling method is sufficient to deal with the visual token compression task.
+            Some data in the existing benchmarks is overly simplistic, leading to the unreasonable phenomenon that even the simplest downsampling method is sufficient to deal with the visual token compression task. This produces the counter-intuitive result that downsampling can outperform sophisticated compression methods, revealing that the benchmarks mix simple and difficult samples.
         </p>
     </section>
 
@@ -227,7 +230,7 @@
         </p>
 
         <div class="figure">
-            <img src="Figure1.svg" alt="VTC-Bench framework">
+            <img class="wide" src="Figure1.svg" alt="VTC-Bench framework">
             <div class="caption">
                 <strong>Figure 1.</strong> The VTC-Bench is a simple but effective framework that can transform any existing benchmarks to a subset that can fairly evaluate VTC (Visual Token Compression) methods. The samples that are answered correctly by the original Qwen2-VL model without downsampling form the input samples.
             </div>
@@ -243,6 +246,58 @@
 
     <section>
         <h2>3. Results & Insights</h2>
+        <p>
+            Across many benchmarks, simple image downsampling often beats more advanced compression methods, suggesting that sophisticated approaches are unnecessary. When we restrict evaluation to the compression-relevant difficult samples (Group A), the trend reverses: the apparent superiority of downsampling largely stems from original benchmarks being saturated with easy cases that do not require fine-grained cues.
+        </p>
+        <p>
+            VTC-Bench amplifies and clarifies method differences. For example, the gaps between methods widen on the filtered difficult samples, indicating that VTC-Bench effectively removes data noise unrelated to visual token compression and promotes fair comparison.
+        </p>
+
+        <div class="figure">
+            <table>
+                <caption><strong>Table: Performance on Group A (Difficult) at 75% compression (Qwen2-VL-7B)</strong></caption>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>ChartQA</th>
+                        <th>OCRBench</th>
+                        <th>GQA</th>
+                        <th>MME</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-row">
+                        <td>VisionZip</td>
+                        <td>51.2%</td>
+                        <td>29.6%</td>
+                        <td>59.3%</td>
+                        <td>54.9%</td>
+                    </tr>
+                    <tr>
+                        <td>DART</td>
+                        <td>39.0%</td>
+                        <td>40.2%</td>
+                        <td>58.9%</td>
+                        <td>69.4%</td>
+                    </tr>
+                    <tr>
+                        <td>FastV</td>
+                        <td>35.0%</td>
+                        <td>29.1%</td>
+                        <td>57.8%</td>
+                        <td>65.4%</td>
+                    </tr>
+                    <tr>
+                        <td>Downsample</td>
+                        <td>0.0%</td>
+                        <td>0.0%</td>
+                        <td>0.0%</td>
+                        <td>0.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div class="figure">
             <img src="Figure4.svg" alt="Group A vs Group B comparison at 75% compression">
             <div class="caption">
@@ -257,7 +312,7 @@
         </div>
         <h3>Major Takeaways</h3>
         <p>
-            Across all benchmarks and compression methods, the accuracy on “simple” samples (Group B) is dramatically higher than on “difficult” samples (Group A). This stark contrast demonstrates that the two groups represent essentially different levels of visual comprehension difficulty, and that downsampling can serve as a filter to denoise benchmarks for visual token compression.
+            Across all benchmarks and compression methods, the accuracy on “simple” samples (Group B) is dramatically higher than on “difficult” samples (Group A); the two groups represent essentially different levels of visual comprehension difficulty. The 0%/100% dichotomy created by image downsampling provides ideal reference points: in Group B, advanced methods show comparable but not superior performance; in Group A, they significantly exceed the downsampling baseline, proving their ability to preserve crucial details. Downsampling thus serves as a filter to denoise benchmarks for visual token compression.
         </p>
     </section>
 
