@@ -31,7 +31,7 @@
             margin: 0; padding: 0;
         }
 
-        /* Navbar & Hero (Same as before) */
+        /* Navbar & Hero */
         .navbar {
             position: fixed; top: 0; width: 100%;
             background: rgba(255, 255, 255, 0.95);
@@ -56,7 +56,7 @@
             font-family: 'Google Sans', sans-serif; color: #111;
             font-weight: 600; margin-top: 0;
         }
-        h1 { font-size: 2.8rem; line-height: 1.2; margin-bottom: 1rem; letter-spacing: -0.02em; }
+        h1 { font-size: 2.5rem; line-height: 1.2; margin-bottom: 1rem; letter-spacing: -0.02em; }
         h2 { font-size: 2rem; margin-bottom: 1.5rem; text-align: center; position: relative; display: inline-block; width: 100%; }
         h2::after { content: ''; display: block; width: 60px; height: 3px; background: var(--accent-color); margin: 10px auto 0; border-radius: 2px; }
         
@@ -65,6 +65,7 @@
         .section:nth-child(odd) { background-color: var(--bg-light); }
         .section:nth-child(even) { background-color: var(--bg-dark); }
         .container { max-width: 1000px; margin: 0 auto; }
+        .content-block { max-width: 800px; margin: 0 auto; text-align: justify; font-family: 'Castoro', serif; font-size: 1.1rem; }
 
         /* Hero */
         .hero { padding-top: 8rem; padding-bottom: 4rem; text-align: center; background: linear-gradient(to bottom, #fff, #f8f9fa); }
@@ -79,7 +80,6 @@
             transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .btn:hover { background-color: #3c4043; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-        .btn i { margin-right: 8px; }
 
         /* Abstract & Figures */
         .abstract-box { background-color: #fff; border: 1px solid #eee; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 900px; margin: 0 auto; text-align: justify; }
@@ -108,11 +108,8 @@
         th { background-color: #f8f9fa; font-weight: 700; color: #202124; border-bottom: 2px solid #dfe1e5; }
         td { border-bottom: 1px solid #f1f3f4; }
         tr:last-child td { border-bottom: none; }
-        .group-header { background-color: #e8f0fe; color: #1967d2; font-weight: 700; text-align: left; padding-left: 20px; }
-        .group-header-a { background-color: #fce8e6; color: #c0392b; font-weight: 700; text-align: left; padding-left: 20px; }
         .highlight-row { background-color: #e6fffa; }
         .best { font-weight: bold; color: #d93025; }
-        .second { text-decoration: underline; }
 
         /* Footer & BibTeX */
         .bibtex-container { background-color: #2d3436; color: #dfe6e9; padding: 2rem; border-radius: 8px; overflow-x: auto; font-family: 'Roboto Mono', monospace; font-size: 0.85rem; }
@@ -140,7 +137,7 @@
 </nav>
 
 <section id="top" class="section hero">
-    <div class="container">
+<div class="container">
         <h1>Are We Using the Right Benchmark:<br>An Evaluation Framework for Visual Token Compression Methods</h1>
         
         <div class="authors">
@@ -169,7 +166,7 @@
             <span class="affiliation-block"><span class="author-sup">7</span>University of Pisa</span>
             <span class="affiliation-block"><span class="author-sup">8</span>University of Trento</span>
         </div>
-        
+
         <div class="btn-group">
             <a href="https://github.com/Chenfei-Liao/VTC-Bench" class="btn">
                 <i class="fab fa-github"></i> View on GitHub
@@ -181,47 +178,114 @@
     </div>
 </section>
 
-<!-- Abstract & Motivation (Simplified for brevity, same structure as before) -->
 <section id="abstract" class="section">
     <div class="container">
-        <div class="abstract-box">
+    <div class="abstract-box">
             <h2 style="margin-top:0; font-size:1.8rem; border-bottom:none;">Abstract</h2>
-            <p>Recent endeavors to accelerate inference in Multimodal Large Language Models (MLLMs) have primarily focused on visual token compression. However, existing benchmarks are originally designed to assess perception and reasoning capabilities, not compression efficiency.</p>
-            <p>Strikingly, our investigation reveals that <strong>simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks</strong>.</p>
-            <p>Motivated by these findings, we introduce <strong>VTC-Bench</strong>, an evaluation framework that incorporates a data filtering mechanism to denoise existing benchmarks, thereby enabling fairer and more accurate assessment.</p>
+            <p>
+                Recent endeavors to accelerate inference in Multimodal Large Language Models (MLLMs) have primarily focused on visual token compression. The effectiveness of these methods is typically assessed by measuring the accuracy drop on established benchmarks, comparing model performance before and after compression. However, these benchmarks are originally designed to assess the perception and reasoning capabilities of MLLMs, rather than to evaluate compression techniques. As a result, directly applying them to visual token compression introduces a task mismatch.
+            </p>
+        <p>
+                Strikingly, our investigation reveals that <strong>simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks</strong>.
+        </p>
+        <p>
+                Through extensive experiments, we make the following observations:
+                <br>(i) Current benchmarks are noisy for the visual token compression task.
+                <br>(ii) Down-sampling is able to serve as a data filter to evaluate the difficulty of samples in the visual token compression task.
+        </p>
+        <p>
+                Motivated by these findings, we introduce <strong>VTC-Bench</strong>, an evaluation framework that incorporates a data filtering mechanism to denoise existing benchmarks, thereby enabling fairer and more accurate assessment of visual token compression methods.
+        </p>
         </div>
     </div>
 </section>
 
 <section id="motivation" class="section">
     <div class="container">
-        <h2>Motivation</h2>
+        <h2>Motivation: The Simplicity Bias</h2>
+
+        <div class="content-block">
+        <p>
+                Multimodal Large Language Models (MLLMs) have shown impressive abilities in understanding, reasoning, and generating content across vision and language, enabling applications such as embodied AI. However, their efficiency is often constrained by the high computational cost of processing images, particularly at high resolutions. This bottleneck arises because visual tokens, derived from image patches, typically far outnumber textual tokens, leading to substantial memory consumption and inference latency. To mitigate this issue, numerous visual token compression methods have been proposed to reduce redundancy while retaining essential visual information.
+        </p>
+        <p>
+                Yet, these methods are typically evaluated on general MLLM benchmarks, which are not designed for compression, therefore failing to provide appropriate evaluation criteria. Thus, in this paper, we uncover a surprising finding: as in Figure 1, <strong>simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks.</strong> This suggests that current evaluation frameworks don't adequately capture the challenges inherent in visual token compression.
+            </p>
+        </div>
+
         <div class="figure-block">
-            <img src="motivation.svg" alt="Motivation">
-            <div class="caption"><strong>Figure 1. The Anomaly.</strong> Simple downsampling (baseline) outperforms sophisticated methods on general benchmarks.</div>
+            <img src="motivation.svg" alt="Motivation: Downsampling Anomaly">
+            <div class="caption">
+                <strong>Figure 1. The Anomaly.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks (Model: Qwen2-VL-7B). (b) Inference time per image comparison of DART and Downsample. Surprisingly, simple downsampling outperforms sophisticated methods.
+            </div>
+        </div>
+
+        <div class="content-block">
+            <p>
+                To investigate this, we conduct a comprehensive empirical study comparing multiple state-of-the-art visual token compression methods against a simple downsampling baseline across eight widely used benchmarks. Based on the study results in Table 1, two crucial findings are concluded:
+            </p>
+            <ol>
+                <li>The counterintuitive phenomenon mentioned above generally exists in popular benchmarks, proving that <em>current benchmarks are noisy for the visual token compression task</em>.</li>
+                <li>The correct sample group under downsampling methods has achieved significantly better accuracy than the incorrect sample group under downsampling methods across various compression methods and benchmarks, proving that <em>downsampling can serve as a data filter to evaluate the difficulty of samples upon the visual token compression task.</em></li>
+            </ol>
         </div>
     </div>
-</section>
+    </section>
 
 <section id="framework" class="section">
     <div class="container">
         <h2>VTC-Bench Framework</h2>
+        
+        <div class="content-block">
+            <p>
+                Based on these findings, we propose VTC-Bench, a new evaluation framework specifically designed to optimize and denoise current existing benchmarks, aiming to evaluate visual token compression methods fairly. By explicitly distinguishing between “simple” and “difficult” samples through downsampling, VTC-Bench adaptively and fairly selects "difficult" samples that satisfy the requirements of evaluating visual token compression methods.
+            </p>
+        </div>
+
         <div class="figure-block">
-            <img src="framework.svg" alt="Framework">
-            <div class="caption"><strong>Figure 2. VTC-Bench Overview.</strong> Using downsampling as a difficulty filter to separate <strong>Group A (Difficult)</strong> from Group B (Simple).</div>
+            <img src="framework.svg" alt="VTC-Bench Framework Pipeline">
+            <div class="caption">
+                <strong>Figure 2. VTC-Bench Overview.</strong> The VTC-Bench is a simple but effective framework that can transform any existing benchmarks to a subset that can fairly evaluate VTC (Visual Token Compression) methods.
+            </div>
+        </div>
+
+        <div class="content-block">
+            <p>
+                The pipeline consists of three critical steps executed for each candidate sample and dynamically adapts to different compression ratios:
+            </p>
+            <p>
+                <strong>Step 1: Inference & Compression.</strong> Given a sample and a target token compression ratio, we run two inference pipelines: (1) a downsampling baseline (the filter) and (2) advanced visual token compression methods (e.g., FastV, VisionZip, DART) evaluated directly on the target MLLM. This step both establishes a fair basis for assessing compression approaches and provides signals for subsequent sample filtering.
+            </p>
+            <p>
+                <strong>Step 2: Grouping.</strong> We first drop out the samples that are incorrectly answered by the original Qwen2-VL. Then, we use the performance of the downsampling method as a binary discriminator to categorize the sample into two groups:
+            </p>
+            <ul>
+                <li><strong>Group A (Difficult Samples):</strong> Samples that are answered incorrectly by the downsampling method.</li>
+                <li><strong>Group B (Simple Samples):</strong> Samples that are answered correctly by the downsampling method.</li>
+            </ul>
+            <p>
+                This step effectively tags each sample with the labels of "simple" or "difficult", filtering the existing benchmarks and removing noisy data that is not applicable for evaluating the visual token compression methods.
+        </p>
+        <p>
+                <strong>Step 3: Result Aggregation.</strong> Based on the classification in Step 2 and the inference results of visual token compression methods in Step 1, we perform a statistical analysis on the accuracy of the "difficult" samples in the methods to be evaluated. Thus, an indicator that can truly reflect the visual compression methods fairly can be obtained.
+        </p>
         </div>
     </div>
-</section>
+    </section>
 
-<!-- FULL DATA EXPERIMENTS SECTION -->
 <section id="experiments" class="section">
     <div class="container">
-        <h2>Experiments & Full Results</h2>
-        <p style="text-align:center; margin-bottom:2rem;">
-            Explore comprehensive results across all compression ratios.
+        <h2>Experiments & Findings</h2>
+        
+        <div class="content-block">
+        <p>
+            When evaluated using VTC-Bench (focusing on "Difficult Samples"), the landscape of visual token compression changes completely. Advanced methods prove their worth where it matters most.
         </p>
+            <p>
+                <strong>Is downsampling all you need?</strong> Across many benchmarks, simple image downsampling often beats more advanced compression methods, suggesting that sophisticated approaches are unnecessary. VTC-Bench overturns this impression: when we restrict evaluation to the compression-relevant <em>difficult samples</em> (Group A), the trend reverses. The apparent superiority of downsampling largely stems from original benchmarks being saturated with <em>easy</em> cases that do not require fine-grained cues. By filtering out such samples, VTC-Bench reveals that for truly challenging instances—those that test visual understanding—advanced compression methods are not only effective but necessary.
+            </p>
+        </div>
 
-        <!-- Main Comparison Tabs -->
         <h3>1. Overall Performance (Qwen2-VL-7B)</h3>
         <div class="tabs" id="tabs-main">
             <button class="tab-btn active" onclick="openTab(event, 'main-75', 'tabs-main')">75%</button>
@@ -231,7 +295,6 @@
             <button class="tab-btn" onclick="openTab(event, 'main-99', 'tabs-main')">99%</button>
         </div>
 
-        <!-- 75% Main Content -->
         <div id="main-75" class="tab-content active table-wrapper">
             <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>MME</th><th>POPE</th><th>MMStar</th><th>OCR</th><th>ChartQA</th><th>ADR</th></tr></thead><tbody>
             <tr><td>FastV</td><td>57.0</td><td>73.7</td><td>73.1</td><td>2083</td><td>84.5</td><td>44.6</td><td>42.0</td><td>58.1</td><td>83.2</td></tr>
@@ -240,8 +303,7 @@
             <tr class="highlight-row"><td>+ Downsample</td><td>59.2</td><td><b class="best">75.0</b></td><td><b class="best">73.8</b></td><td><b class="best">2259</b></td><td>86.2</td><td><b class="best">50.1</b></td><td><b class="best">64.9</b></td><td>65.0</td><td><b class="best">91.0</b></td></tr>
             </tbody></table>
         </div>
-
-        <!-- 88% Main Content -->
+        
         <div id="main-88" class="tab-content table-wrapper">
             <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>MME</th><th>POPE</th><th>MMStar</th><th>OCR</th><th>ChartQA</th><th>ADR</th></tr></thead><tbody>
             <tr><td>FastV</td><td>52.3</td><td>65.0</td><td>65.5</td><td>1854</td><td>77.4</td><td>40.3</td><td>25.9</td><td>32.9</td><td>70.2</td></tr>
@@ -250,8 +312,7 @@
             <tr class="highlight-row"><td>+ Downsample</td><td><b class="best">55.5</b></td><td><b class="best">69.0</b></td><td><b class="best">70.2</b></td><td><b class="best">2127</b></td><td>82.9</td><td><b class="best">44.0</b></td><td><b class="best">48.8</b></td><td>24.8</td><td><b class="best">77.6</b></td></tr>
             </tbody></table>
         </div>
-
-        <!-- 93% Main Content -->
+        
         <div id="main-93" class="tab-content table-wrapper">
             <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>MME</th><th>POPE</th><th>MMStar</th><th>OCR</th><th>ChartQA</th><th>ADR</th></tr></thead><tbody>
             <tr><td>FastV</td><td>49.0</td><td>57.1</td><td>57.9</td><td>1684</td><td>74.9</td><td>37.5</td><td>18.7</td><td>20.6</td><td>62.1</td></tr>
@@ -261,7 +322,6 @@
             </tbody></table>
         </div>
         
-        <!-- 96% Main Content -->
         <div id="main-96" class="tab-content table-wrapper">
             <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>MME</th><th>POPE</th><th>MMStar</th><th>OCR</th><th>ChartQA</th><th>ADR</th></tr></thead><tbody>
             <tr><td>FastV</td><td>46.1</td><td>43.9</td><td>46.6</td><td>1589</td><td>72.4</td><td>33.6</td><td>14.4</td><td>15.8</td><td>54.5</td></tr>
@@ -271,7 +331,6 @@
             </tbody></table>
         </div>
         
-         <!-- 99% Main Content -->
         <div id="main-99" class="tab-content table-wrapper">
             <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>MME</th><th>POPE</th><th>MMStar</th><th>OCR</th><th>ChartQA</th><th>ADR</th></tr></thead><tbody>
             <tr><td>FastV</td><td>38.2</td><td>23.9</td><td>24.5</td><td>1189</td><td>55.0</td><td>26.1</td><td>5.8</td><td>11.9</td><td>38.0</td></tr>
@@ -281,9 +340,8 @@
             </tbody></table>
         </div>
 
-        <br>
         <h3>2. Group Analysis (Qwen2-VL-7B)</h3>
-        <p>The gap between Group A (Difficult) and Group B (Simple).</p>
+        <p style="text-align:center">The accuracy gap between Group A (Difficult) and Group B (Simple).</p>
         <div class="tabs" id="tabs-group">
             <button class="tab-btn active" onclick="openTab(event, 'grp-75', 'tabs-group')">75%</button>
             <button class="tab-btn" onclick="openTab(event, 'grp-88', 'tabs-group')">88.89%</button>
@@ -292,14 +350,13 @@
             <button class="tab-btn" onclick="openTab(event, 'grp-99', 'tabs-group')">99%</button>
         </div>
 
-        <!-- 75% Group Content -->
         <div id="grp-75" class="tab-content active table-wrapper">
             <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>MME</th><th>POPE</th><th>MMStar</th><th>ChartQA</th><th>Average</th></tr></thead><tbody>
             <tr class="group-header"><td colspan="9">Group B (Simple) - Downsample Correct</td></tr>
             <tr><td>FastV</td><td>87.6</td><td>95.9</td><td>95.8</td><td>96.7</td><td>94.8</td><td>76.0</td><td>78.1</td><td>85.3</td></tr>
             <tr><td>VisionZip</td><td>91.2</td><td>93.8</td><td>93.6</td><td>95.3</td><td>96.8</td><td>81.4</td><td>87.3</td><td>87.2</td></tr>
             <tr class="highlight-row"><td>Downsample</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td></tr>
-            <tr class="group-header-a"><td colspan="9">Group A (Difficult) - Downsample Incorrect</td></tr>
+            <tr class="group-header" style="background-color:#fce8e6; color:#c0392b"><td colspan="9">Group A (Difficult) - Downsample Incorrect</td></tr>
             <tr><td>FastV</td><td>57.8</td><td>45.2</td><td>56.5</td><td>78.9</td><td>65.4</td><td>41.0</td><td>35.0</td><td>51.1</td></tr>
             <tr><td>VisionZip</td><td>59.3</td><td>42.4</td><td>42.2</td><td>54.9</td><td>72.5</td><td>45.9</td><td>51.2</td><td>49.8</td></tr>
             <tr><td>DART</td><td>58.9</td><td>54.8</td><td>52.2</td><td>67.6</td><td>69.4</td><td>47.0</td><td>39.0</td><td>53.6</td></tr>
@@ -307,61 +364,56 @@
             </tbody></table>
         </div>
         
-        <!-- 88% Group Content -->
         <div id="grp-88" class="tab-content table-wrapper">
              <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>MME</th><th>POPE</th><th>MMStar</th><th>ChartQA</th><th>Average</th></tr></thead><tbody>
             <tr class="group-header"><td colspan="9">Group B (Simple)</td></tr>
             <tr><td>FastV</td><td>82.5</td><td>90.3</td><td>90.8</td><td>94.0</td><td>88.7</td><td>73.0</td><td>61.7</td><td>77.8</td></tr>
             <tr><td>VisionZip</td><td>83.4</td><td>89.0</td><td>88.1</td><td>92.2</td><td>92.3</td><td>73.0</td><td>74.4</td><td>78.6</td></tr>
             <tr class="highlight-row"><td>Downsample</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td></tr>
-            <tr class="group-header-a"><td colspan="9">Group A (Difficult)</td></tr>
+            <tr class="group-header" style="background-color:#fce8e6; color:#c0392b"><td colspan="9">Group A (Difficult)</td></tr>
             <tr><td>FastV</td><td>44.5</td><td>39.2</td><td>44.1</td><td>59.4</td><td>46.8</td><td>31.0</td><td>28.4</td><td>38.9</td></tr>
             <tr><td>VisionZip</td><td>49.4</td><td>33.2</td><td>44.4</td><td>48.1</td><td>70.0</td><td>30.3</td><td>49.7</td><td>43.4</td></tr>
             <tr><td>DART</td><td>47.5</td><td>40.5</td><td>40.9</td><td>49.6</td><td>57.7</td><td>35.4</td><td>27.3</td><td>41.3</td></tr>
             <tr class="highlight-row" style="color:#c0392b"><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
             </tbody></table>
         </div>
-
-         <!-- 93% Group Content -->
-         <div id="grp-93" class="tab-content table-wrapper">
+        
+        <div id="grp-93" class="tab-content table-wrapper">
              <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>MME</th><th>POPE</th><th>MMStar</th><th>ChartQA</th><th>Average</th></tr></thead><tbody>
             <tr class="group-header"><td colspan="9">Group B (Simple)</td></tr>
             <tr><td>FastV</td><td>81.4</td><td>85.7</td><td>86.6</td><td>91.5</td><td>88.1</td><td>74.5</td><td>74.8</td><td>77.0</td></tr>
             <tr class="highlight-row"><td>Downsample</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td></tr>
-            <tr class="group-header-a"><td colspan="9">Group A (Difficult)</td></tr>
+            <tr class="group-header" style="background-color:#fce8e6; color:#c0392b"><td colspan="9">Group A (Difficult)</td></tr>
             <tr><td>FastV</td><td>35.7</td><td>31.9</td><td>35.3</td><td>48.8</td><td>37.4</td><td>22.8</td><td>14.8</td><td>30.0</td></tr>
             <tr><td>VisionZip</td><td>41.0</td><td>34.5</td><td>33.3</td><td>43.5</td><td>66.3</td><td>24.3</td><td>26.1</td><td>35.4</td></tr>
             <tr class="highlight-row" style="color:#c0392b"><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
             </tbody></table>
         </div>
         
-        <!-- 96% Group Content -->
-         <div id="grp-96" class="tab-content table-wrapper">
+        <div id="grp-96" class="tab-content table-wrapper">
              <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>MME</th><th>POPE</th><th>MMStar</th><th>ChartQA</th><th>Average</th></tr></thead><tbody>
             <tr class="group-header"><td colspan="9">Group B (Simple)</td></tr>
             <tr><td>FastV</td><td>79.2</td><td>74.5</td><td>74.4</td><td>90.1</td><td>85.8</td><td>68.6</td><td>75.3</td><td>71.9</td></tr>
             <tr class="highlight-row"><td>Downsample</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td></tr>
-            <tr class="group-header-a"><td colspan="9">Group A (Difficult)</td></tr>
+            <tr class="group-header" style="background-color:#fce8e6; color:#c0392b"><td colspan="9">Group A (Difficult)</td></tr>
             <tr><td>FastV</td><td>29.6</td><td>24.7</td><td>33.1</td><td>35.6</td><td>35.6</td><td>21.5</td><td>9.3</td><td>25.0</td></tr>
             <tr><td>VisionZip</td><td>38.6</td><td>31.2</td><td>32.6</td><td>37.9</td><td>60.0</td><td>24.5</td><td>15.1</td><td>31.4</td></tr>
             <tr class="highlight-row" style="color:#c0392b"><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
             </tbody></table>
         </div>
         
-        <!-- 99% Group Content -->
-         <div id="grp-99" class="tab-content table-wrapper">
+        <div id="grp-99" class="tab-content table-wrapper">
              <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>MME</th><th>POPE</th><th>MMStar</th><th>ChartQA</th><th>Average</th></tr></thead><tbody>
             <tr class="group-header"><td colspan="9">Group B (Simple)</td></tr>
             <tr><td>FastV</td><td>75.5</td><td>55.6</td><td>53.2</td><td>75.3</td><td>59.3</td><td>61.0</td><td>73.3</td><td>59.1</td></tr>
             <tr class="highlight-row"><td>Downsample</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td></tr>
-            <tr class="group-header-a"><td colspan="9">Group A (Difficult)</td></tr>
+            <tr class="group-header" style="background-color:#fce8e6; color:#c0392b"><td colspan="9">Group A (Difficult)</td></tr>
             <tr><td>FastV</td><td>18.3</td><td>18.3</td><td>21.5</td><td>21.5</td><td>44.3</td><td>15.0</td><td>3.8</td><td>18.4</td></tr>
             <tr><td>VisionZip</td><td>23.4</td><td>28.8</td><td>32.2</td><td>28.5</td><td>53.6</td><td>19.4</td><td>5.5</td><td>24.4</td></tr>
             <tr class="highlight-row" style="color:#c0392b"><td>Downsample</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
             </tbody></table>
         </div>
 
-        <br>
         <h3>3. LLaVA-OV-7B Results</h3>
         <div class="tabs" id="tabs-llava">
             <button class="tab-btn active" onclick="openTab(event, 'llava-75', 'tabs-llava')">75%</button>
@@ -370,26 +422,64 @@
             <button class="tab-btn" onclick="openTab(event, 'llava-96', 'tabs-llava')">96%</button>
             <button class="tab-btn" onclick="openTab(event, 'llava-99', 'tabs-llava')">99%</button>
         </div>
-
+        
         <div id="llava-75" class="tab-content active table-wrapper">
             <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>POPE</th><th>MMStar</th></tr></thead><tbody>
             <tr class="group-header"><td colspan="6">Group B</td></tr>
             <tr><td>FastV</td><td>84.0</td><td>93.5</td><td>94.7</td><td>92.2</td><td>73.1</td></tr>
-            <tr class="group-header-a"><td colspan="6">Group A</td></tr>
+            <tr class="group-header" style="background-color:#fce8e6; color:#c0392b"><td colspan="6">Group A</td></tr>
             <tr><td>FastV</td><td>54.3</td><td>70.5</td><td>69.1</td><td>63.8</td><td>48.6</td></tr>
             </tbody></table>
         </div>
-        <!-- Simplified LLaVA tabs for brevity in this tool call, but structure supports full data -->
+        
         <div id="llava-88" class="tab-content table-wrapper">
              <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>POPE</th><th>MMStar</th></tr></thead><tbody>
-             <tr class="group-header-a"><td colspan="6">Group A</td></tr>
+             <tr class="group-header" style="background-color:#fce8e6; color:#c0392b"><td colspan="6">Group A</td></tr>
              <tr><td>FastV</td><td>45.3</td><td>64.6</td><td>66.4</td><td>39.1</td><td>42.4</td></tr>
              </tbody></table>
         </div>
-        <!-- ... placeholders for other llava tabs ... -->
+        <div id="llava-93" class="tab-content table-wrapper">
+             <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>POPE</th><th>MMStar</th></tr></thead><tbody>
+             <tr class="group-header" style="background-color:#fce8e6; color:#c0392b"><td colspan="6">Group A</td></tr>
+             <tr><td>FastV</td><td>36.7</td><td>51.2</td><td>53.3</td><td>29.7</td><td>32.6</td></tr>
+             </tbody></table>
+        </div>
+        <div id="llava-96" class="tab-content table-wrapper">
+             <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>POPE</th><th>MMStar</th></tr></thead><tbody>
+             <tr class="group-header" style="background-color:#fce8e6; color:#c0392b"><td colspan="6">Group A</td></tr>
+             <tr><td>FastV</td><td>31.4</td><td>37.4</td><td>43.1</td><td>24.5</td><td>28.6</td></tr>
+             </tbody></table>
+        </div>
+        <div id="llava-99" class="tab-content table-wrapper">
+             <table><thead><tr><th>Method</th><th>GQA</th><th>MMB</th><th>MMB<sup>CN</sup></th><th>POPE</th><th>MMStar</th></tr></thead><tbody>
+             <tr class="group-header" style="background-color:#fce8e6; color:#c0392b"><td colspan="6">Group A</td></tr>
+             <tr><td>FastV</td><td>25.7</td><td>25.8</td><td>29.6</td><td>39.3</td><td>21.9</td></tr>
+             </tbody></table>
+        </div>
 
     </div>
 </section>
+
+<section id="conclusion" class="section">
+    <div class="container">
+        <h2>Conclusion</h2>
+        <div class="content-block">
+            <p>
+                This paper systematically analyzes the task mismatch problem presented in current MLLM benchmarks when evaluating visual token compression methods. Based on a surprising and counterintuitive finding: simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks, we conduct a comprehensive empirical study across several advanced visual token compression methods.
+            </p>
+            <p>
+                Thus, two crucial findings are concluded based on the empirical study:
+            </p>
+            <ol>
+                <li>Current benchmarks are noisy for the visual token compression task.</li>
+                <li>Downsampling can serve as a data filter to evaluate the difficulty of samples upon the visual token compression task.</li>
+            </ol>
+            <p>
+                Furthermore, we propose VTC-Bench, a new evaluation framework specifically designed to optimize and denoise current existing benchmarks by explicitly distinguishing between “simple” and “difficult” samples through downsampling. Through this work, we hope to not only advance the field of visual token compression but also inspire more discussions within the community on "how to properly evaluate efficient MLLMs."
+            </p>
+        </div>
+    </div>
+    </section>
 
 <section id="citation" class="section">
     <div class="container">
@@ -403,7 +493,7 @@
 }</pre>
         </div>
     </div>
-</section>
+    </section>
 
 <footer>
     <div class="container">
@@ -413,66 +503,30 @@
             This implies the design was borrowed from the open-source project Nerfies, a common practice in the research community.
         </p>
     </div>
-</footer>
+    </footer>
 
 <a href="#top" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
 
 <script>
     function openTab(evt, tabName, groupName) {
         var i, tabcontent, tablinks;
-        // Hide contents in this group
-        var container = document.getElementById(groupName).parentElement;
-        tabcontent = container.querySelectorAll('.tab-content');
-        for (i = 0; i < tabcontent.length; i++) {
-            // Only hide contents belonging to this group logic if they were scoped, 
-            // but here we select by ID which is safer.
-            // Actually, we need to strictly select siblings of the tabs container or map IDs.
-            // Simplified: select all tab-content inside this section's container logic?
-            // Let's use specific IDs for simplicity in this generated code.
-        }
-        
-        // Better logic: specific IDs for containers? 
-        // Let's just loop through all elements with class "tab-content" that are siblings?
-        // Simplest: The buttons passed 'groupName' which is the ID of the .tabs container.
         var btnContainer = document.getElementById(groupName);
         var contentSiblings = btnContainer.parentElement.querySelectorAll('.tab-content');
         
-        // But some tab-contents belong to Main, some to Group. We need to distinguish.
-        // We will assume tabName matches an ID unique across page.
-        
-        // 1. Deactivate all buttons in this group
         tablinks = btnContainer.getElementsByClassName("tab-btn");
         for (i = 0; i < tablinks.length; i++) {
             tablinks[i].className = tablinks[i].className.replace(" active", "");
         }
 
-        // 2. Hide all contents relevant to this group.
-        // We can infer them because they are siblings following the nav, or explicitly list them.
-        // Hack: hide ALL tab-contents in the same parent section?
-        // Let's manually list IDs for safety or use a shared class prefix?
-        // Approach: Group contents share a class specific to that group? 
-        // Let's stick to: Hide all tab-contents that are siblings of the button container?
-        // Yes, because structure is container -> [tabs, content, content...]
         for (i = 0; i < contentSiblings.length; i++) {
-            // Check if this content actually belongs to this group (by id prefix?)
-            if (groupName === 'tabs-main' && contentSiblings[i].id.startsWith('main-')) {
-                 contentSiblings[i].style.display = "none";
-            }
-            if (groupName === 'tabs-group' && contentSiblings[i].id.startsWith('grp-')) {
-                 contentSiblings[i].style.display = "none";
-            }
-            if (groupName === 'tabs-llava' && contentSiblings[i].id.startsWith('llava-')) {
-                 contentSiblings[i].style.display = "none";
-            }
+            if (groupName === 'tabs-main' && contentSiblings[i].id.startsWith('main-')) contentSiblings[i].style.display = "none";
+            if (groupName === 'tabs-group' && contentSiblings[i].id.startsWith('grp-')) contentSiblings[i].style.display = "none";
+            if (groupName === 'tabs-llava' && contentSiblings[i].id.startsWith('llava-')) contentSiblings[i].style.display = "none";
         }
 
-        // 3. Show current and activate button
         document.getElementById(tabName).style.display = "block";
         evt.currentTarget.className += " active";
     }
-    
-    // Initialize: Ensure defaults are visible (already done via CSS 'active' class, but JS needs to match)
-    // No extra JS needed if HTML 'active' class is set correctly on load.
 </script>
 
 </body>
