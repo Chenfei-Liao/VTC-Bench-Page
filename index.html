@@ -194,11 +194,9 @@
     </header>
 
     <div class="figure">
-        <object data="Figure1.pdf" type="application/pdf" width="100%" height="480px">
-            <a href="Figure1.pdf">Figure 1 PDF</a>
-        </object>
+        <img src="Figure2.svg" alt="Average Decline Ratio and inference time">
         <div class="caption">
-            <strong>Figure 1.</strong> Simple downsampling can match or surpass advanced compression on existing benchmarks, revealing a simplicity bias.
+            <strong>Figure 2.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks (Qwen2-VL-7B). (b) Inference time per image comparison of DART and Downsample on MMStar at 0.75 compression (1× A800).
         </div>
     </div>
 
@@ -229,11 +227,9 @@
         </p>
 
         <div class="figure">
-            <object data="Figure2.pdf" type="application/pdf" width="100%" height="420px">
-                <a href="Figure2.pdf">Figure 2 PDF</a>
-            </object>
+            <img src="Figure1.svg" alt="VTC-Bench framework">
             <div class="caption">
-                <strong>Figure 2.</strong> VTC-Bench pipeline: Group B (Simple) remains correct after downsampling; Group A (Difficult) fails after downsampling.
+                <strong>Figure 1.</strong> VTC-Bench framework: starting from samples answered correctly at original resolution, downsampling filters the data into difficult (Group A) and simple (Group B) subsets for fair evaluation of visual token compression.
             </div>
         </div>
 
@@ -246,59 +242,24 @@
     </section>
 
     <section>
-        <h2>3. Key Results & Insights</h2>
-        <p>
-            When evaluated using VTC-Bench (focusing on "Difficult Samples"), the landscape of visual token compression changes completely. Advanced methods prove their worth where it matters most.
-        </p>
-        
-        [cite_start]<p><strong>Table: Performance on "Difficult Samples" (Group A) at 75% Compression (Qwen2-VL-7B)</strong> [cite: 136]</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Method</th>
-                    <th>ChartQA</th>
-                    <th>OCRBench</th>
-                    <th>GQA</th>
-                    <th>MME</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="color: #999; font-style: italic;">
-                    <td>Downsample (Baseline)</td>
-                    <td>0.0%</td>
-                    <td>0.0%</td>
-                    <td>0.0%</td>
-                    <td>0.0%</td>
-                </tr>
-                <tr>
-                    <td>FastV</td>
-                    <td>35.0%</td>
-                    <td>29.1%</td>
-                    <td>57.8%</td>
-                    <td>65.4%</td>
-                </tr>
-                <tr class="highlight-row">
-                    <td>VisionZip</td>
-                    <td><strong>51.2%</strong></td>
-                    <td>29.6%</td>
-                    <td><strong>59.3%</strong></td>
-                    <td>54.9%</td>
-                </tr>
-                <tr>
-                    <td>DART</td>
-                    <td>39.0%</td>
-                    <td><strong>40.2%</strong></td>
-                    <td>58.9%</td>
-                    <td><strong>69.4%</strong></td>
-                </tr>
-            </tbody>
-        </table>
-
+        <h2>3. Results & Insights</h2>
+        <div class="figure">
+            <img src="Figure4.svg" alt="Group A vs Group B comparison at 75% compression">
+            <div class="caption">
+                <strong>Figure 4.</strong> Comparison of advanced token compression methods and downsampling on Qwen2-VL-7B by groups at 75% compression (Group A: difficult; Group B: simple).
+            </div>
+        </div>
+        <div class="figure">
+            <img src="Figure3.svg" alt="VTC-Bench results on Qwen2-VL-7B">
+            <div class="caption">
+                <strong>Figure 3.</strong> VTC-Bench results on Qwen2-VL-7B after filtering for difficult samples (Group A).
+            </div>
+        </div>
         <h3>Major Takeaways</h3>
         <ul>
-            <li><strong>Reversing the Trend:</strong> On the full benchmark downsampling looks strong, but on the filtered VTC-Bench advanced methods clearly outperform it.</li>
-            <li><strong>Task Sensitivity:</strong> Fine-grained tasks (e.g., charts, OCR) show the largest gaps between sophisticated compression and naive downsampling.</li>
-            <li><strong>Fairer Comparison:</strong> VTC-Bench magnifies differences, revealing which methods truly retain critical visual context.</li>
+            <li><strong>显著组间差距：</strong> 简单样本（Group B）精度远高于困难样本（Group A），基准中混有大量易样本。</li>
+            <li><strong>下采样提供参考点：</strong> Group B 中下采样可达 100%，Group A 为 0%；高级方法在 Group A 才展现优势。</li>
+            <li><strong>公平评测：</strong> 聚焦 Group A 放大方法差异，凸显复杂压缩在细粒度任务（OCR、ChartQA）上的价值。</li>
         </ul>
     </section>
 
