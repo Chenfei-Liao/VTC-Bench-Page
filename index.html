@@ -196,27 +196,27 @@
     <div class="figure">
         <img src="Figure2.svg" alt="Average Decline Ratio and inference time">
         <div class="caption">
-            <strong>Figure 2.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks (Qwen2-VL-7B). (b) Inference time per image comparison of DART and Downsample on MMStar at 0.75 compression (1× A800).
+            <strong>Figure 2.</strong> (a) Average Decline Ratio (ADR) of five visual token compression methods on eight benchmarks (Model: Qwen2-VL-7B; Benchmark: as shown in Table 1; Device: 1 A800). (b) Inference time per image comparison of DART and Downsample (Model: Qwen2-VL-7B; Benchmark: MMStar; Compression Ratio: 0.75; Device: 1 A800).
         </div>
     </div>
 
     <div class="abstract-box">
         <span class="abstract-title">Abstract</span>
         <p>
-            Multimodal LLMs rely on visual token compression to speed up inference. Yet mainstream benchmarks were built for perception/reasoning, not for testing fidelity under compression. We find that <strong>simple image downsampling</strong> often matches or exceeds state-of-the-art compression methods, implying many samples are insensitive to fine-grained visual details.
+            Recent endeavors to accelerate inference in Multimodal Large Language Models (MLLMs) have primarily focused on visual token compression. The effectiveness of these methods is typically assessed by measuring the accuracy drop on established benchmarks, comparing model performance before and after compression.
         </p>
         <p>
-            We introduce <strong>VTC-Bench</strong>, a framework that uses downsampling as a discriminator to split data into <strong>Group B (Simple)</strong>—samples still correct after aggressive downsampling—and <strong>Group A (Difficult)</strong>—samples that fail after downsampling. Evaluating compression on Group A yields a difficulty-aware, fairer comparison.
+            However, these benchmarks are originally designed to assess the perception and reasoning capabilities of MLLMs, rather than to evaluate compression techniques. As a result, directly applying them to visual token compression introduces a task mismatch. Strikingly, our investigation reveals that simple image downsampling consistently outperforms many advanced compression methods across multiple widely used benchmarks.
         </p>
         <p>
-            On Group A, advanced methods show clear gains over naive downsampling; on Group B the gains vanish. VTC-Bench thus exposes the true strengths of visual token compression methods.
+            Through extensive experiments, we make the following observations: (i) Current benchmarks are noisy for the visual token compression task. (ii) Down-sampling is able to serve as a data filter to evaluate the difficulty of samples in the visual token compression task. Motivated by these findings, we introduce VTC-Bench, an evaluation framework that incorporates a data filtering mechanism to denoise existing benchmarks, thereby enabling fairer and more accurate assessment of visual token compression methods. The code will be released to facilitate future research.
         </p>
     </div>
 
     <section>
         <h2>1. Motivation: Simplicity Bias in Current Benchmarks</h2>
         <p>
-            Many benchmarks can be solved with low-resolution cues, masking the benefits of sophisticated compression. Downsampling alone can retain accuracy while reducing tokens, exposing the simplicity bias.
+            Some data in the existing benchmarks is overly simplistic, leading to the unreasonable phenomenon that even the simplest downsampling method is sufficient to deal with the visual token compression task.
         </p>
     </section>
 
@@ -229,16 +229,16 @@
         <div class="figure">
             <img src="Figure1.svg" alt="VTC-Bench framework">
             <div class="caption">
-                <strong>Figure 1.</strong> VTC-Bench framework: starting from samples answered correctly at original resolution, downsampling filters the data into difficult (Group A) and simple (Group B) subsets for fair evaluation of visual token compression.
+                <strong>Figure 1.</strong> The VTC-Bench is a simple but effective framework that can transform any existing benchmarks to a subset that can fairly evaluate VTC (Visual Token Compression) methods. The samples that are answered correctly by the original Qwen2-VL model without downsampling form the input samples.
             </div>
         </div>
 
         <h3>Grouping Logic</h3>
         <ul>
-            <li><strong>Group B (Simple):</strong> Origin correct & downsample correct.</li>
-            <li><strong>Group A (Difficult):</strong> Origin correct & downsample wrong.</li>
+            <li><strong>Group B (Simple):</strong> Samples that are answered correctly by the downsampling method.</li>
+            <li><strong>Group A (Difficult):</strong> Samples that are answered incorrectly by the downsampling method.</li>
         </ul>
-        <p>We focus evaluation on Group A to measure detail preservation and robustness under compression.</p>
+        <p>We then evaluate all compression methods on these two groups separately to assess whether the sophisticated methods demonstrate their expected superiority on the “difficult” samples where image downsampling fails.</p>
     </section>
 
     <section>
@@ -246,21 +246,19 @@
         <div class="figure">
             <img src="Figure4.svg" alt="Group A vs Group B comparison at 75% compression">
             <div class="caption">
-                <strong>Figure 4.</strong> Comparison of advanced token compression methods and downsampling on Qwen2-VL-7B by groups at 75% compression (Group A: difficult; Group B: simple).
+                <strong>Figure 4.</strong> Comparison of advanced token compression methods and downsampling on Qwen2-VL-7B by groups at 75% compression.
             </div>
         </div>
         <div class="figure">
             <img src="Figure3.svg" alt="VTC-Bench results on Qwen2-VL-7B">
             <div class="caption">
-                <strong>Figure 3.</strong> VTC-Bench results on Qwen2-VL-7B after filtering for difficult samples (Group A).
+                <strong>Figure 3.</strong> VTC-Bench results on Qwen2-VL-7B.
             </div>
         </div>
         <h3>Major Takeaways</h3>
-        <ul>
-            <li><strong>显著组间差距：</strong> 简单样本（Group B）精度远高于困难样本（Group A），基准中混有大量易样本。</li>
-            <li><strong>下采样提供参考点：</strong> Group B 中下采样可达 100%，Group A 为 0%；高级方法在 Group A 才展现优势。</li>
-            <li><strong>公平评测：</strong> 聚焦 Group A 放大方法差异，凸显复杂压缩在细粒度任务（OCR、ChartQA）上的价值。</li>
-        </ul>
+        <p>
+            Across all benchmarks and compression methods, the accuracy on “simple” samples (Group B) is dramatically higher than on “difficult” samples (Group A). This stark contrast demonstrates that the two groups represent essentially different levels of visual comprehension difficulty, and that downsampling can serve as a filter to denoise benchmarks for visual token compression.
+        </p>
     </section>
 
     <section>
