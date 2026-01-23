@@ -150,6 +150,7 @@
         <a href="#motivation" class="nav-link">Motivation</a>
         <a href="#framework" class="nav-link">Framework</a>
         <a href="#experiments" class="nav-link">Experiments</a>
+        <a href="#appendix" class="nav-link">Appendix</a>
         <a href="#citation" class="nav-link">Citation</a>
     </div>
 </nav>
@@ -305,13 +306,6 @@
             </p>
         </div>
 
-        <div class="figure-block">
-            <img src="fig3.png" alt="VTC-Bench Results" style="max-width: 80%;">
-            <div class="caption">
-                <strong>Figure 3.</strong> VTC-Bench results on Qwen2-VL-7B. Advanced methods show significant advantages on difficult samples.
-            </div>
-        </div>
-
         <h3>1. Overall Performance (Qwen2-VL-7B)</h3>
         <div class="tabs" id="tabs-main">
             <button class="tab-btn active" onclick="openTab(event, 'main-75', 'tabs-main')">75%</button>
@@ -369,13 +363,6 @@
             <tr><td>DART</td><td>40.5</td><td>30.8</td><td>30.7</td><td>1346</td><td>60.0</td><td>28.8</td><td><b class="best">23.2</b></td><td>11.8</td><td>45.4</td></tr>
             <tr class="highlight-row"><td>+ Downsample</td><td><b class="best">43.5</b></td><td><b class="best">51.6</b></td><td><b class="best">51.9</b></td><td><b class="best">1589</b></td><td><b class="best">72.8</b></td><td><b class="best">33.8</b></td><td>13.2</td><td>12.1</td><td><b class="best">55.4</b></td></tr>
             </tbody></table>
-        </div>
-
-        <div class="figure-block">
-            <img src="fig4.png" alt="Group Analysis" style="max-width: 80%;">
-            <div class="caption">
-                <strong>Figure 4.</strong> Comparison of advanced token compression methods and downsampling on Qwen2-VL-7B by groups.
-            </div>
         </div>
 
         <h3>2. Group Analysis (Qwen2-VL-7B)</h3>
@@ -593,6 +580,71 @@
     </div>
 </section>
 
+<section id="appendix" class="section">
+    <div class="container">
+        <h2>Appendix</h2>
+        
+        <div class="content-block">
+            <h3>Concurrent Similar Research</h3>
+            <p>
+                <strong>VisionThink:</strong> VisionThink identifies that downsampling shows surprising effectiveness on most general VQA tasks except for OCR and detail-sensitive benchmarks. It employs a reinforcement learning framework to dynamically decide if high-resolution images are needed. Our work further investigates this observation through extensive experiments, clarifying the task mismatch in current benchmarks and proving downsampling's potential as a data filter.
+            </p>
+            <p>
+                <strong>EffiVLM-Bench:</strong> EffiVLM-Bench offers a unified evaluation framework for assessing training-free acceleration techniques. Unlike EffiVLM-Bench, which aims to provide a toolkit, VTC-Bench specifically targets the task mismatch problem in visual token compression evaluation.
+            </p>
+
+            <h3>Experiment Details</h3>
+            <p>
+                All experiments are conducted on one A800 GPU. Code environment: Python=3.10, torch=2.6.0, torchvision=0.21.0. Bicubic interpolation is used for downsampling.
+            </p>
+
+            <h3>Benchmark Details</h3>
+            <ul>
+                <li><strong>GQA:</strong> 22M reasoning questions with strict distribution control.</li>
+                <li><strong>MMBench:</strong> 3,217 multiple-choice questions across 20 dimensions.</li>
+                <li><strong>MME:</strong> Evaluates perceptual and cognitive abilities across 14 subtasks.</li>
+                <li><strong>POPE:</strong> Evaluates object hallucination under different sampling strategies.</li>
+                <li><strong>MMStar:</strong> 1,500 samples covering six core abilities.</li>
+                <li><strong>OCRBench:</strong> 1,000 manually verified samples for OCR capabilities.</li>
+                <li><strong>ChartQA:</strong> Evaluates visual and logical reasoning over charts.</li>
+            </ul>
+
+            <h3>Visualization between Groups</h3>
+            <p>
+                We visualize "difficult" and "simple" samples to observe their characteristics. "Difficult" samples (Group A) tend to require multiple detail perceptions and comparisons (e.g., finding extreme values in charts or complex counting). "Simple" samples (Group B) usually rely on medium/large-sized patterns or simple comparisons.
+            </p>
+        </div>
+
+        <div class="figure-block">
+            <img src="visuald.png" alt="Difficult Samples Visualization">
+            <div class="caption">
+                <strong>Figure A1.</strong> Visualization of "difficult" samples with downsampling ratio set to 2.
+            </div>
+        </div>
+
+        <div class="figure-block">
+            <img src="visuals.png" alt="Simple Samples Visualization">
+            <div class="caption">
+                <strong>Figure A2.</strong> Visualization of "simple" samples with downsampling ratio set to 2.
+            </div>
+        </div>
+
+        <div class="content-block">
+            <h3>Statistical Analysis of Image Properties</h3>
+            <p>
+                We investigated whether the difficulty of samples could be attributed to basic low-level visual properties (entropy, brightness, contrast, colorfulness, size). Results show no statistically significant difference in these properties between Group A and Group B, validating that "difficulty" cannot be simply predicted by these elementary features and justifying the use of downsampling as a filter.
+            </p>
+        </div>
+
+        <div class="figure-block">
+            <img src="stats_visualization.png" alt="Statistical Visualization">
+            <div class="caption">
+                <strong>Figure A3.</strong> Visualization of low-level visual properties of two groups based on MMStar and POPE.
+            </div>
+        </div>
+    </div>
+</section>
+
 <section id="citation" class="section">
     <div class="container">
         <h2>Citation</h2>
@@ -645,4 +697,3 @@
 
 </body>
 </html>
-
